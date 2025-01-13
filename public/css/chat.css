@@ -1,0 +1,40 @@
+
+#chatrooms-list {
+    width: 80%;
+    margin: 0 auto;
+    text-align: center;
+}
+
+#chatrooms ul {
+    list-style-type: none;
+    padding: 0;
+}
+
+#chatrooms li {
+    background-color: #ddd;
+    padding: 10px;
+    margin: 10px 0;
+    border-radius: 5px;
+}
+
+#chatroom-details {
+    width: 60%;
+    margin: 20px auto;
+    background-color: #fff;
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+
+#messages {
+    height: 300px;
+    overflow-y: auto;
+    border-bottom: 1px solid #ccc;
+    margin-bottom: 10px;
+}
+
+#message-input {
+    width: 80%;
+    padding: 10px;
+    margin-right: 10px;
+}

@@ -1,8 +1,24 @@
 # Furconnect
 
-•	"FurConnect es una aplicación diseñada para los amantes de las mascotas, con el objetivo de facilitar el emparejamiento de mascotas compatibles y promover interacciones entre sus dueños. Nuestra idea nace de una necesidad real: en Mérida, más de 800 mil dueños de mascotas buscan parejas compatibles para sus peludos, según datos del INEGI 2023."
+¿Qué es Furconnect?
+Es una app que te permite conectar con otros amantes de los animales, crear emparejamientos adecuados y compartir experiencias.
 
-• "Ofrece una experiencia intuitiva y fácil de usar. Los usuarios pueden crear perfiles para sus mascotas, especificando preferencias para el emparejamiento. Además, pueden acordar encuentros y compartir experiencias para formar cruzas compatibles."
+Objetivos
+•	Asegurar que los usuarios encuentren la app intuitiva y fácil y fácil de usar para facilitar la búsqueda de parejas para sus mascotas y realizar publicaciones.
+•	Lograr que los usuarios elijan FurConnect sobre otras aplicaciones gracias a sus beneficios únicos, como la personalización en los emparejamientos.
+•	Los encuentros son organizados para que los dueños compartan experiencias y formen cruzas compatibles.
 
-• “Nuestro producto mínimo viable incluye funcionalidades como la creación de perfiles, emparejamiento personalizado y recomendaciones de sitios y productos para mascotas. Todo esto busca garantizar que FurConnect sea la mejor opción frente a otras aplicaciones similares."
+Investigación de mercado
+De acuerdo con datos de INEGI, hay alrededor de 80 millones de mascotas en México. 
+En Yucatán hay 2.7 millones de mascotas, y en Mérida, de los cuales 828 mil dueños desean emparejar a sus mascotas
+
+Producto mínimo viable (MVP)
+•	Crear una cuenta y un perfil de mascota según tus preferencias.
+•	Emparejamiento de mascotas compatibles.
+•	Acordar encuentros para las mascotas.
+•	Los usuarios comparten sus experiencias y recomendaciones para la cruza.
+
+Objetivos a futuro 
+•	Recomendación de sitios y productos para mascotas
+•	Evento de interés para los dueños de la mascota
 

@@ -3,6 +3,9 @@
 ## ¿Qué es Furconnect?
 Es una app que te permite conectar con otros amantes de los animales, crear emparejamientos adecuados y compartir experiencias.
 
+## Problematica
+Muchos dueños de mascotas enfrentan dificultades al buscar parejas compatibles para sus animales. Las opciones actuales suelen ser informales, poco confiables y sin garantías de seguridad o bienestar para las mascotas. Esto puede llevar a cruces inadecuadas o problemas de salud en las crías.
+
 ## Objetivos
 -	Asegurar que los usuarios encuentren la app intuitiva y fácil y fácil de usar para facilitar la búsqueda de parejas para sus mascotas y realizar publicaciones.
 -	Lograr que los usuarios elijan FurConnect sobre otras aplicaciones gracias a sus beneficios únicos, como la personalización en los emparejamientos.

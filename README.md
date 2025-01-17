@@ -9,7 +9,7 @@ Es una app que te permite conectar con otros amantes de los animales, crear empa
 -	Los encuentros son organizados para que los dueños compartan experiencias y formen cruzas compatibles.
 
 ## Investigación de mercado
-De acuerdo con datos de INEGI, hay alrededor de 80 millones de mascotas en México. 
+De acuerdo con datos de *INEGI*, hay alrededor de 80 millones de mascotas en México. 
 En Yucatán hay 2.7 millones de mascotas, y en Mérida, de los cuales 828 mil dueños desean emparejar a sus mascotas
 
 ## Producto mínimo viable (MVP)
@@ -21,4 +21,7 @@ En Yucatán hay 2.7 millones de mascotas, y en Mérida, de los cuales 828 mil du
 ### Objetivos a futuro 
 -	Recomendación de sitios y productos para mascotas
 -	Evento de interés para los dueños de la mascota
+
+> "Conecta amigos peludos con un clic"
+
 

@@ -1,6 +1,6 @@
 # Furconnect
 
-##¿Qué es Furconnect?
+## ¿Qué es Furconnect?
 Es una app que te permite conectar con otros amantes de los animales, crear emparejamientos adecuados y compartir experiencias.
 
 ## Objetivos

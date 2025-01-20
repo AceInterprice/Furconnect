@@ -17,7 +17,7 @@ const swaggerOptions = {
                 description: 'Servidor de desarrollo',
             },
             {
-                url: 'https://furconnect-api.onrender.com',
+                url: 'https://furconnect.onrender.com',
                 description: 'Servidor de producción',
             },
         ],

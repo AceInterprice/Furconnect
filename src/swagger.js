@@ -124,7 +124,9 @@ const swaggerOptions = {
     apis: [
         './src/routes/pets.routes.js',
         './src/routes/users.routes.js',
-        './src/routes/solicitudes.routes.js'
+        './src/routes/solicitudes.routes.js',
+        './src/routes/encounters.routes.js',
+        './src/routes/seguimiento.routes.js'
       ]
 };
 

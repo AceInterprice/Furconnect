@@ -18,8 +18,17 @@ export const createUser = async (nombre, email, password, telefono, ciudad, esta
     const userExist = await User.findOne({ email }); // Verifica si el correo ya está registrado
     if (userExist) throw new Error('El correo electrónico ya está registrado.');
 
-    const hashedPassword = await bcrypt.hash(password, 10); // Encripta la contraseña
-    const newUser = new User({ nombre, email, password: hashedPassword, telefono, ciudad, estado, pais, role }); // Crea un nuevo usuario
+    // Validar la contraseña antes de encriptarla
+    const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[\W_]).{8,}$/;
+    if (!passwordRegex.test(password)) {
+        throw new Error('La contraseña debe tener al menos 8 caracteres, una mayúscula, una minúscula, un número y un carácter especial.');
+    }
+
+    // Encripta la contraseña
+    const hashedPassword = await bcrypt.hash(password, 10);
+
+    // Crea un nuevo usuario
+    const newUser = new User({ nombre, email, password: hashedPassword, telefono, ciudad, estado, pais, role });
 
     await newUser.save(); // Guarda el nuevo usuario en la base de datos
     return newUser;

@@ -7,7 +7,8 @@ import usersRoutes from './routes/users.routes.js';
 import solicitudesRoutes from './routes/solicitudes.routes.js';
 import encountersRoutes from './routes/encounters.routes.js';
 import seguimientoRoutes from './routes/seguimiento.routes.js';
-import chatRoomRoutes from './routes/chatroom.routes.js'
+import chatRoomRoutes from './routes/chatroom.routes.js'; 
+import publicationRoutes from './routes/publication.routes.js'; 
 import cors from 'cors';
 import cookieParser from 'cookie-parser';
 import swaggerUiExpress from 'swagger-ui-express';
@@ -48,4 +49,5 @@ app.use(solicitudesRoutes);
 app.use(encountersRoutes);
 app.use(seguimientoRoutes);
 app.use(chatRoomRoutes);
+app.use(publicationRoutes);
 export default app;

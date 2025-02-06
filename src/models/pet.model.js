@@ -2,7 +2,7 @@ import mongoose from 'mongoose';
 
 const petSchema = new mongoose.Schema({
   nombre: { type: String, required: true },
-  raza: { type: String, required: true },
+  raza: { type: String, required: true},
   tipo: { type: String, required: true }, // Ej.: chihuahua manzano, venado
   color: String,
   tamaño: { type: String, enum: ["pequeño", "mediano", "grande"] },

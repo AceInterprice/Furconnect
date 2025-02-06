@@ -19,7 +19,7 @@ function showContainer(containerId) {
     }
 }
 
-
+///////// MASCOTAS //////////
 async function fetchPets() {
     showPagination(false);
     showContainer('petsContainer');
@@ -164,37 +164,49 @@ async function removePet(id) {
     }
 }
 
+////// Paginacion ///////
 let currentPage = 1; // Página actual
 const limitPerPage = 20; // Elementos por página
 
-async function fetchAllPets(page = 1, limit = limitPerPage) {
+// Función para manejar la búsqueda
+function handleSearch() {
+    const searchQuery = document.getElementById('searchInput').value.trim(); // Obtener el texto de búsqueda
+    fetchAllPets(1, limitPerPage, searchQuery); // Realizar la búsqueda con el término de búsqueda
+}
+
+// Función para obtener todas las mascotas (con filtrado)
+async function fetchAllPets(page = 1, limit = limitPerPage, searchQuery = '') {
     currentPage = page; // Actualizar la página actual
-    showContainer('requestContainer');
+    showContainer('requestContainer'); // Mostrar el contenedor de solicitudes
     const token = getToken();
-    const response = await fetch(`/api/pets?page=${page}&limit=${limit}`, {
+    
+    // Construir la URL con los parámetros de búsqueda
+    let url = `/api/pets?page=${page}&limit=${limit}`;
+    if (searchQuery) url += `&query=${encodeURIComponent(searchQuery)}`; // Pasar el término de búsqueda
+
+    // Realizar la solicitud para obtener las mascotas
+    const response = await fetch(url, {
         method: 'GET',
         headers: { 'Authorization': `Bearer ${token}` }
     });
 
     if (response.ok) {
         const data = await response.json();
-        const allPets = data.pets;
-        const totalPets = data.total; // Suponiendo que el backend devuelve un campo `total`
-        displayAllPets(allPets);
-        renderPagination(totalPets, limit, currentPage, 'fetchAllPets');
-        document.getElementById('requestContainer').style.display = 'block';
+        const allPets = data.pets; // Mascotas filtradas
+        const totalPets = data.total; // Total de mascotas filtradas
+        displayAllPets(allPets); // Mostrar las mascotas filtradas
+        renderPagination(totalPets, limit, currentPage, 'fetchAllPets'); // Paginación
     } else {
-        const errorData = await response.json();
-        alert(`Error al obtener todas las mascotas: ${errorData.error}`);
+        alert(`Error al obtener las mascotas.`);
     }
     document.getElementById('addPetForm').style.display = 'none';
     document.getElementById('petsContainer').style.display = 'none';
 }
 
-
+// Función para mostrar las mascotas
 function displayAllPets(pets) {
-    const container = document.getElementById('allPetsTable'); // Usado como contenedor
-    container.innerHTML = ''; // Limpiar el contenedor
+    const container = document.getElementById('allPetsTable');
+    container.innerHTML = ''; // Limpiar contenedor antes de agregar nuevas mascotas
     if (pets.length > 0) {
         const petList = pets.map(pet => `
             <div class="pet-card">
@@ -210,18 +222,13 @@ function displayAllPets(pets) {
                 </div>
             </div>
         `).join('');
-
-        container.innerHTML = petList;
+        container.innerHTML = petList; // Mostrar las mascotas
     } else {
-        container.innerHTML = `
-            <div style="text-align: center; padding: 20px;">
-                <p>No se encontraron mascotas disponibles.</p>
-            </div>
-        `;
+        container.innerHTML = `<div style="text-align: center; padding: 20px;">No se encontraron mascotas disponibles.</div>`;
     }
 }
 
-
+// Función de paginación (sin cambios)
 function renderPagination(totalItems, limit, currentPage, callbackName) {
     const totalPages = Math.ceil(totalItems / limit);
     const paginationContainer = document.getElementById('paginationContainer');
@@ -234,26 +241,16 @@ function renderPagination(totalItems, limit, currentPage, callbackName) {
         let startPage = Math.max(1, currentPage - Math.floor(visibleRange / 2));
         let endPage = Math.min(totalPages, currentPage + Math.floor(visibleRange / 2));
 
-        if (startPage > 1) {
-            paginationContainer.innerHTML += `
-                <a href="#" onclick="${callbackName}(1)">&laquo; 1</a><span>...</span>
-            `;
-        }
-
         for (let i = startPage; i <= endPage; i++) {
             paginationContainer.innerHTML += `
                 <a href="#" class="${i === currentPage ? 'active' : ''}" onclick="${callbackName}(${i})">${i}</a>
             `;
         }
-
-        if (endPage < totalPages) {
-            paginationContainer.innerHTML += `
-                <span>...</span><a href="#" onclick="${callbackName}(${totalPages})">${totalPages} &raquo;</a>
-            `;
-        }
     }
 }
 
+
+//////// Solicitudes /////////
 async function sendRequest(mascotaSolicitadaId, usuarioSolicitadoId) {
     const mascotaSolicitanteId = document.getElementById('myPetsSelector').value; // Obtener el ID de la mascota seleccionada
     const requestData = {
@@ -584,6 +581,7 @@ async function removeEncounter(id) {
     }
 }
 
+//////////////// SEGUIMIENTOS ///////////
 // Función para cargar todos los seguimientos
 async function fetchSeguimientos() {
     showContainer('seguimientosContainer');
@@ -809,4 +807,63 @@ function showPagination(show) {
     }
 }
 
+/////////PUBLICACIONES///////
+const fetchPublications = async () => {
+    try {
+      const response = await fetch('/api/publications', {
+        method: 'GET',
+        headers: {
+          'Authorization': `Bearer ${localStorage.getItem('token')}`
+        }
+      });
+      if (response.ok) {
+        const publications = await response.json();
+        renderPublications(publications);
+      } else {
+        console.error('Error al obtener las publicaciones');
+      }
+    } catch (error) {
+      console.error('Error al realizar la solicitud:', error);
+    }
+  };
+  
+  const renderPublications = (publications) => {
+    const publicationContainer = document.getElementById('publication-list');
+    publicationContainer.innerHTML = ''; // Limpiar el contenedor antes de agregar nuevas publicaciones
+  
+    publications.forEach((publication) => {
+      const mascota = publication.mascota_id;   // Acceso a los datos de la mascota
+      const usuario = publication.usuario_id;   // Acceso a los datos del usuario
+  
+      const publicationElement = document.createElement('div');
+      publicationElement.classList.add('publication');
+  
+      publicationElement.innerHTML = ` 
+        <h3>${publication.title}</h3>
+        <p><strong>Etiqueta:</strong> ${publication.etiqueta}</p>
+        <p>${publication.description}</p>
+        
+        <p><strong>Raza:</strong> ${mascota ? mascota.raza : 'No especificado'}</p>
+        <p><strong>Vacunas:</strong> ${mascota && mascota.vacunas ? mascota.vacunas.join(', ') : 'No registradas'}</p>
+        <p><strong>Sexo:</strong> ${mascota ? mascota.sexo : 'No especificado'}</p>
+        <p><strong>Temperamento:</strong> ${mascota && mascota.temperamento ? mascota.temperamento : 'No especificado'}</p>
+        <p><strong>Pedigrí:</strong> ${mascota && mascota.pedigree ? 'Sí' : 'No'}</p>
+  
+        <p><strong>Contacto:</strong> ${usuario ? usuario.telefono : 'Sin número registrado'}</p>
+        <p><strong>Ciudad:</strong> ${publication.ciudad}</p>
+        <p><strong>Estado:</strong> ${publication.estado}</p>
+        <p><strong>País:</strong> ${publication.pais}</p>
+        <p><strong>Fecha de publicación:</strong> ${new Date(publication.fecha_publicacion).toLocaleDateString()}</p>
+        <p><strong>Estado de publicación:</strong> ${publication.estado_publicacion}</p>
+  
+        <button onclick="editPublication('${publication._id}')">Editar</button>
+        <button onclick="deletePublication('${publication._id}')">Eliminar</button>
+      `;
+      publicationContainer.appendChild(publicationElement);
+    });
+  };
+
+
+
+    
 

@@ -27,12 +27,20 @@
     <!-- Formulario de Solicitud de Mascota -->
     <div id="requestContainer" class="content-container" style="display: none;">
         <h1>Solicitar Mascota</h1>
+        <!-- Campo de búsqueda -->
+        <input type="text" id="searchInput" placeholder="Buscar mascotas..." onkeyup="handleSearch()">
+        <button id="searchButton" onclick="handleSearch()">Buscar</button>
+    
+        <!-- Selector de mascotas -->
         <div class="elegir">
             <label for="myPetsSelector">Elige tu mascota:</label>
             <select id="myPetsSelector"></select>
         </div>
+    
+        <!-- Tabla o contenedor donde se mostrarán las mascotas -->
         <div id="allPetsTable"></div>
     </div>
+    
 
     <!-- Formulario para agregar mascotas -->
     <form id="addPetForm" class="content-container" style="display: none;">

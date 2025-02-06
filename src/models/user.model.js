@@ -9,7 +9,14 @@ const userSchema = new mongoose.Schema({
     match: /^.+@.+\..+$/,
     description: "Debe ser un email válido."
   },
-  password: { type: String, required: true },
+  password: { type: String, required: true, 
+    validate: {
+      validator: function(value) {
+        return /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/.test(value);
+      },
+      message: "La contraseña debe tener al menos 8 caracteres, una mayúscula, una minúscula, un número y un carácter especial."
+    }
+   },
   telefono: {
     type: String,
     match: /^[0-9]{10}$/, 

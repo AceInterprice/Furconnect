@@ -68,7 +68,7 @@ async function showChat() {
             return;
         }
 
-        const response = await fetch('http://localhost:3000/chatrooms', {
+        const response = await fetch('/chatrooms', { //*
             method: 'GET',
             headers: { 'Authorization': `Bearer ${token}` },
         });

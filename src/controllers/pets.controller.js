@@ -14,24 +14,26 @@ import {
 // Buscar mascotas por texto
 export const searchPets = async (req, res) => {
     try {
-        const { query } = req.query; // Obtiene el parámetro de búsqueda de la query
+        const { query, page = 1, limit = 20 } = req.query;
         if (!query) {
             return res.status(400).json({ message: 'El parámetro de búsqueda es obligatorio' });
         }
-        
-        const pets = await searchPetsByText(query);
-        
+
+        const { pets, total } = await searchPetsByText(query, parseInt(page), parseInt(limit));
+
         if (pets.length === 0) {
             return res.status(404).json({ message: 'No se encontraron mascotas con esos criterios' });
         }
-        
-        res.status(200).json(pets);
+        res.status(200).json({
+            pets,
+            total,
+            page: parseInt(page),
+            pages: Math.ceil(total / limit)
+        });
     } catch (error) {
         res.status(500).json({ error: error.message });
     }
 };
-
-
 
 // Listar todas las mascotas
 export const listPets = async (req, res) => {
@@ -77,12 +79,17 @@ export const getPetsByOwner = async (req, res) => {
 export const addPet = async (req, res) => {
     try {
         const { usuario_id, nombre, raza, tipo, color, tamaño, edad, sexo, vacunas, temperamento, historial_cruzas, media, pedigree } = req.body;
-        const pet = await addNewPet(usuario_id, nombre, raza, tipo, color, tamaño, edad, sexo, vacunas, temperamento, historial_cruzas, media, pedigree);
-        res.status(201).json({ message: 'Mascota registrada exitosamente', pet });
+        
+        // Obtener la URL de la imagen subida
+        const imagen = req.file ? `/uploads/${req.file.filename}` : null; 
+
+        const pet = await addNewPet(usuario_id, imagen, nombre, raza, tipo, color, tamaño, edad, sexo, vacunas, temperamento, historial_cruzas, media, pedigree);
+        res.status(201).json({ message: "Mascota registrada exitosamente", pet });
     } catch (error) {
         res.status(400).json({ error: error.message });
     }
 };
+
 
 
 // Eliminar una mascota
@@ -99,7 +106,14 @@ export const removePet = async (req, res) => {
 export const updatePet = async (req, res) => {
     try {
         const { nombre, raza, tipo, color, tamaño, edad, sexo, vacunas, temperamento, historial_cruzas, media, pedigree } = req.body;
-        const updatedPet = await updatePetInService(req.params.id, { nombre, raza, tipo, color, tamaño, edad, sexo, vacunas, temperamento, historial_cruzas, media, pedigree });
+        
+        // Si se subió una nueva imagen, actualiza el campo 'imagen'
+        const updates = { nombre, raza, tipo, color, tamaño, edad, sexo, vacunas, temperamento, historial_cruzas, media, pedigree };
+        if (req.file) {
+            updates.imagen = `/uploads/${req.file.filename}`;
+        }
+
+        const updatedPet = await updatePetInService(req.params.id, updates);
 
         if (!updatedPet) {
             return res.status(404).json({ message: 'Mascota no encontrada' });

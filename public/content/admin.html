@@ -1,0 +1,268 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="../css/consultas.css">
+    <link rel="stylesheet" href="../css/chat.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <title>Mascotas del Dueño</title>
+</head>
+<body>
+    <div class="navbar">
+        <!-- Botones de navegación -->
+        <button onclick="fetchPets()">Mis Mascotas</button>
+        <button onclick="showAddPetForm()">Agregar Mascota</button>
+        <button onclick="fetchSolicitudes()">Ver Solicitudes</button>
+    </div>
+    <!-- Contenedor de paginación reutilizable -->
+    <div id="paginationContainer" class="pagination" style="display: none;"></div>
+    
+    <!-- Contenedor de mascotas -->
+    <div id="petsContainer" class="content-container"></div>
+    <!-- Contenedor para la vista detallada de la mascota -->
+    <div id="petDetails" class="pet-details-container" style="display: none;"></div>
+
+        <!-- Modal de confirmación -->
+    <div id="confirmModal" class="modal" style="display: none;">
+        <div class="modal-content">
+            <p>¿Estás seguro de que deseas eliminar esta mascota?</p>
+            <button id="confirmDelete">Sí, eliminar</button>
+            <button id="cancelDelete">Cancelar</button>
+        </div>
+    </div>
+
+    <!-- Formulario de Solicitud de Mascota -->
+    <div id="requestContainer" class="content-container" style="display: none;">
+        <h1>Solicitar Mascota</h1>
+        <!-- Campo de búsqueda -->
+        <input type="text" id="searchInput" placeholder="Buscar mascotas..." onkeyup="handleSearch()">
+        <button id="searchButton" onclick="handleSearch()">Buscar</button>
+    
+        <!-- Selector de mascotas -->
+        <div class="elegir">
+            <label for="myPetsSelector">Elige tu mascota:</label>
+            <select id="myPetsSelector"></select>
+        </div>
+        <!-- Tabla o contenedor donde se mostrarán las mascotas -->
+        <div id="allPetsTable"></div>
+    </div>
+    
+
+    <!-- Formulario para agregar mascotas -->
+    <form id="addPetForm" class="content-container" style="display: none;">
+        <h3 id="formTitle">Agregar Nueva Mascota</h3>
+        <input type="hidden" id="petId">
+        <input type="text" id="petName" placeholder="Nombre" required><br>
+        <select id="petTipo" required>
+            <option value="">Tipo de mascota</option>
+            <option value="Perro">Perro</option>
+            <option value="Gato">Gato</option>
+            <option value="Otro">Otro</option>
+        </select><br>
+        <input type="text" id="petRaza" placeholder="Raza Ejem(Mestizo, Pitbull, etc.)" required><br>
+        <input type="text" id="petColor" placeholder="Color"><br>
+        <select id="petTamaño" required>
+            <option value="">Seleccione Tamaño</option>
+            <option value="pequeño">Pequeño</option>
+            <option value="mediano">Mediano</option>
+            <option value="grande">Grande</option>
+        </select><br>
+        <input type="number" id="petEdad" placeholder="Edad" required><br>
+        <select id="petSexo" required>
+            <option value="">Seleccione Sexo</option>
+            <option value="macho">Macho</option>
+            <option value="hembra">Hembra</option>
+        </select><br>
+        <select id="petTemperamento" required>
+            <option value="">Temperamento</option>
+            <option value="Amigable">Amigable</option>
+            <option value="Activo">Activo</option>
+            <option value="Tímido">Tímido</option>
+            <option value="Curioso">Curioso</option>
+            <option value="Tranquilo">Tranquilo</option>
+            <option value="Obediente">Obediente</option>
+            <option value="Ansioso">Ansioso</option>
+            <option value="Juguetón">Juguetón</option>
+            <option value="Terco">Terco</option>
+            <option value="Dominante">Dominante</option>
+        </select><br>
+        <label>Vacunas (separadas por comas):</label>
+        <input type="text" id="petVacunas"><br>
+        <label>Media URLs (separadas por comas):</label>
+        <input type="text" id="petMedia"><br>
+        <label>Pedigree:</label>
+        <input type="checkbox" id="petPedigree"><br>
+        <button type="submit">Guardar Mascota</button>
+    </form>
+    <!--Formulario de publicaciones-->
+    <form id="addPublic" class="content-container">
+        <label>Imagen (url): </label> <br>
+        <input type="text" id=""><br>
+        <select id="" required>
+            <option value="">Etiqueta</option>
+            <option value="Social">Social</option>
+            <option value="Cruza">Cruza</option>
+        </select><br>
+        <label id="">Titulo</label><br>
+        <input type="text" id=""><br>
+        <label id="">Descripcion</label><br>
+        <input type="text" id=""><br>
+        <label id="">Raza</label><br>
+        <input type="text" id=""><br>
+        <section id="" required>
+            <option value="">Sexo</option>
+            <option value="Macho">Macho</option>
+            <option value="Hembra">Hembra</option>
+        </section><br>
+        <label id="">Vacunas</label><br>
+        <input type="text" id=""><br>
+        <select id="">
+            <option value="">Temperamento</option>
+            <option value="Amigable">Amigable</option>
+            <option value="Activo">Activo</option>
+            <option value="Tímido">Tímido</option>
+            <option value="Curioso">Curioso</option>
+            <option value="Tranquilo">Tranquilo</option>
+            <option value="Obediente">Obediente</option>
+            <option value="Ansioso">Ansioso</option>
+            <option value="Juguetón">Juguetón</option>
+            <option value="Terco">Terco</option>
+            <option value="Dominante">Dominante</option>
+        </select><br>
+        <label>Pedigree:</label>
+        <input type="checkbox" id=""><br>
+        <label id="">Contacto</label><br>
+        <input type="text" id=""><br>
+        <input type="text" id="" placeholder="Ciudad"><br>
+        <input type="text" id="" placeholder="Estado"><br>
+        <input type="text" id="" placeholder="Pais"><br>
+        <button type="submit">Publicar</button>
+    </form>
+    <!-- Contenedor de solicitudes -->
+    <div id="solicitudesContainer" class="content-container" style="display: none;">
+        <h1>Solicitudes recibidas</h1>
+        <table id="solicitudesTable" class="tables">
+            <thead>
+                <tr>
+                    <th>Mascota Solicitante</th>
+                    <th>Usuario Solicitante</th>
+                    <th>Mascota Solicitada</th>
+                    <th>Usuario Solicitado</th>
+                    <th>Estado</th>
+                </tr>
+            </thead>
+            <tbody></tbody>
+        </table>
+        <h1>Solicitudes enviadas</h1>
+        <table id="solicitudesEnviadasTable" class="tables">
+            <thead>
+                <tr>
+                    <th>Mascota Solicitante</th>
+                    <th>Usuario Solicitante</th>
+                    <th>Mascota Solicitada</th>
+                    <th>Usuario Solicitado</th>
+                    <th>Estado</th>
+                </tr>
+            </thead>
+            <tbody></tbody>
+        </table>
+    </div>
+
+    <!-- Formulario de Encuentros -->
+    <div id="encounterContainer" class="content-container" style="display:none;">
+        <form id="encounterForm">
+            <h2>Añadir/Editar Encuentro</h2>
+            <input type="hidden" id="encounterId">
+            <label for="mascotaId">ID Mascota 1:</label>
+            <input type="text" id="mascotaId" required>
+            <label for="mascota2Id">ID Mascota 2:</label>
+            <input type="text" id="mascota2Id" required>
+            <label for="fecha">Fecha:</label>
+            <input type="datetime-local" id="fecha" required>
+            <fieldset>
+                <legend>Ubicación</legend>
+                <label for="ciudad">Ciudad:</label>
+                <input type="text" id="ciudad" required>
+                <label for="calle">Calle:</label>
+                <input type="text" id="calle" required>
+                <label for="nombreLugar">Nombre del Lugar:</label>
+                <input type="text" id="nombreLugar" required>
+            </fieldset>
+            <label for="estado">Estado:</label>
+            <select id="estado" required>
+                <option value="pendiente">Pendiente</option>
+                <option value="confirmado">Confirmado</option>
+                <option value="completado">Completado</option>
+                <option value="cancelado">Cancelado</option>
+            </select>
+            <button type="submit">Guardar Encuentro</button>
+            <button type="button" onclick="document.getElementById('encounterContainer').style.display='none';">Cancelar</button>
+        </form>
+    </div>
+
+    <!-- Contenedor de encuentros -->
+    <div id="encountersContainer" class="content-container" style="display:none;">
+        <h2>Lista de Encuentros</h2>
+        <div class="encounter-card-container"></div>
+    </div>
+
+    <!-- Formulario de Seguimiento -->
+    <div id="seguimientoContainer" class="content-container" style="display:none;">
+        <form id="seguimientoForm" onsubmit="handleSeguimientoSubmit(event)">
+            <input type="hidden" id="seguimientoId">
+            <label for="encuentroId">ID Encuentro:</label>
+            <input type="text" id="encuentroId" required>
+            <label for="exitoso">Exitoso:</label>
+            <select id="exitoso" required>
+                <option value="true">Sí</option>
+                <option value="false">No</option>
+            </select>
+            <div id="actualizacionesContainer">
+                <h3>Actualizaciones</h3>
+                <button type="button" onclick="addActualizacionField()">Añadir Actualización</button>
+            </div>
+            <button type="submit">Guardar Seguimiento</button>
+            <button type="button" onclick="document.getElementById('seguimientoContainer').style.display='none';">Cancelar</button>
+        </form>
+    </div>
+
+    <!-- Contenedor de lista de Seguimientos -->
+    <div id="seguimientosContainer" class="content-container" style="display: none;">
+        <h2>Lista de Seguimientos</h2>
+        <table id="seguimientosTable" class="styled-table">
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Exitoso</th>
+                    <th>Acciones</th>
+                </tr>
+            </thead>
+            <tbody></tbody>
+        </table>
+    </div>
+
+    <!-- Contenedor de lista de Chats -->
+<div id="chatrooms-list" class="content-container" style="display: none;">
+    <h2>Mis Chats</h2>
+    <ul id="chatrooms">
+        <!-- Listado de salas aquí -->
+    </ul>
+</div>
+
+<!-- Contenedor de Chats -->
+<div id="chatroom-details" class="content-container" style="display: none;">
+    <h2>Chat en Sala: <span id="chatroom-id"></span></h2>
+    <div id="messages">
+        <!-- Aquí se mostrarán los mensajes -->
+    </div>
+    <input type="text" id="message-input" placeholder="Escribe un mensaje...">
+    <button id="send-message">Enviar</button>
+</div>
+
+<script src="https://cdn.socket.io/4.6.1/socket.io.min.js"></script>
+<script src="../JS/script.js"></script>
+<script src="../JS/chat.js"></script>
+
+</body>
+</html>

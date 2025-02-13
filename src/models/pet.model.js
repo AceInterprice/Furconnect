@@ -1,9 +1,11 @@
 import mongoose from 'mongoose';
 
 const petSchema = new mongoose.Schema({
+  imagen: {type: String, 
+            description: "Imagen de la mascota"},
   nombre: { type: String, required: true },
   raza: { type: String, required: true},
-  tipo: { type: String, required: true }, // Ej.: chihuahua manzano, venado
+  tipo: { type: String, required: true },
   color: String,
   tamaño: { type: String, enum: ["pequeño", "mediano", "grande"] },
   edad: { type: Number, min: 0, required: true },
@@ -19,6 +21,7 @@ const petSchema = new mongoose.Schema({
       exitoso: { type: Boolean, required: true }
     }
   ],
+  descricion: String, //pendiente 
   media: [
     {
       type: String,

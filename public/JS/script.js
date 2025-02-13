@@ -24,50 +24,84 @@ async function fetchPets() {
     showPagination(false);
     showContainer('petsContainer');
     const token = getToken();
-    const response = await fetch(`/api/pets/owner/${userID}`, {
-        method: 'GET',
-        headers: { 'Authorization': `Bearer ${token}` }
-    });
-    if (response.ok) {
-        const pets = await response.json();
-        displayPets(pets);
-        populatePetSelector(pets); // Llenar el selector de mascotas
-        document.getElementById('petsContainer').style.display = 'block'; // Asegúrate de mostrar el contenedor de mascotas
+    try {
+        const response = await fetch(`/api/pets/owner/${userID}`, {
+            method: 'GET',
+            headers: { 'Authorization': `Bearer ${token}` }
+        });
+        if (!response.ok) {
+            if (response.status === 401) {
+                alert('Sesión expirada. Inicia sesión nuevamente.');
+                window.location.href = './index.html';
+                return;
+            }
+            const errorMsg = await response.text();
+            alert(`Error: ${response.status} - ${errorMsg}`);
+            return;
+        }
 
-    } else {
-        const errorData = await response.json();
-        document.getElementById('petsContainer').textContent = `Error al obtener mascotas: ${errorData.error}`;
+        const pets = await response.json();
+        displayUserPets(pets);
+        populatePetSelector(pets);
+        document.getElementById('petsContainer').style.display = 'block';
+    } catch (error) {
+        alert('Error al conectar con el servidor.');
     }
 }
 
-function displayPets(pets) {
+function displayUserPets(pets) {
     const petsContainer = document.getElementById('petsContainer');
     if (pets.length > 0) {
-        const petList = pets.map(pet => `
-            <div class="pet-card">
-                <h3>${pet.nombre}</h3>
-                <p><strong>ID:</strong> ${pet._id}</p>
-                <p><strong>Raza:</strong> ${pet.raza}</p>
-                <p><strong>Tipo:</strong> ${pet.tipo}</p>
-                <p><strong>Color:</strong> ${pet.color}</p>
-                <p><strong>Tamaño:</strong> ${pet.tamaño}</p>
-                <p><strong>Edad:</strong> ${pet.edad}</p>
-                <p><strong>Sexo:</strong> ${pet.sexo}</p>
-                <p><strong>Pedigree:</strong> ${pet.pedigree ? 'Sí' : 'No'}</p>
-                <p><strong>Temperamento:</strong> ${pet.temperamento}</p>
-                <p><strong>Vacunas:</strong> ${pet.vacunas.join(', ')}</p>
-                <p><strong>Media:</strong> ${pet.media.join(', ')}</p>
-                <div class="pet-actions">
-                    <button onclick="editPet('${pet._id}', '${pet.nombre}', '${pet.raza}', '${pet.tipo}', '${pet.color}', '${pet.tamaño}', ${pet.edad}, '${pet.sexo}', ${pet.pedigree}, '${pet.temperamento}', '${pet.vacunas.join(', ')}', '${pet.media.join(', ')}')">Editar</button>
-                    <button onclick="removePet('${pet._id}')">Eliminar</button>
+        const petList = pets.map(pet =>`
+            <div class="pet-card" onclick="showPetDetails('${pet._id}', '${pet.nombre}', '${pet.raza}', '${pet.tipo}', '${pet.color}', '${pet.tamaño}', ${pet.edad}, '${pet.sexo}', ${pet.pedigree}, '${pet.temperamento}', '${pet.vacunas.join(', ')}', '${pet.media.join(', ')}', '${pet.imagen}')">
+                <img src="${pet.imagen}" alt="${pet.nombre}">
+                <div class="pet-content">
+                    <div class="pet-header">
+                        <h3>${pet.nombre}</h3>
+                        <span class="sex-icon">
+                            ${pet.sexo === 'macho' ? '<i class="fas fa-mars"></i>' : '<i class="fas fa-venus"></i>'}
+                        </span>
+                    </div>
+                    <p><strong>Raza:</strong> ${pet.raza}</p>
+                    <p><strong>Edad:</strong> ${pet.edad} años</p>
                 </div>
-            </div>
-        `).join('');
+            </div>`
+        ).join('');
         
         petsContainer.innerHTML = petList;
     } else {
         petsContainer.textContent = 'No se encontraron mascotas.';
     }
+}
+
+function showPetDetails(id, nombre, raza, tipo, color, tamaño, edad, sexo, pedigree, temperamento, vacunas, media, imagen) {
+    const petDetails = document.getElementById('petDetails');
+    petDetails.innerHTML = `
+        <div class="pet-details-card">
+            <button class="close-btn" onclick="closePetDetails()">&times;</button>
+            <img src="${imagen}">
+            <h2>${nombre} ${pedigree ? '<i class="fas fa-medal" title="Pedigree"></i>' : ''}</h2>
+            <p><strong>ID:</strong> ${id}</p>
+            <p><strong>Raza:</strong> ${raza}</p>
+            <p><strong>Tipo:</strong> ${tipo}</p>
+            <p><strong>Color:</strong> ${color}</p>
+            <p><strong>Tamaño:</strong> ${tamaño}</p>
+            <p><strong>Edad:</strong> ${edad} años</p>
+            <p><strong>Sexo:</strong> ${sexo}</p>
+            <p><strong>Temperamento:</strong> ${temperamento}</p>
+            <p><strong>Vacunas:</strong> ${vacunas}</p>
+            <p><strong>Media:</strong> ${media}</p>
+            <div class="button-container">
+                <button class="edit-btn" onclick="editPet('${id}', '${nombre}', '${raza}', '${tipo}', '${color}', '${tamaño}', '${edad}', '${sexo}', ${pedigree}, '${temperamento}', '${vacunas}', '${media}')">Editar</button>
+                <button class="delete-btn" onclick="removePet('${id}')">Eliminar</button>
+            </div>
+        </div>
+    `;
+    petDetails.style.display = 'flex'; // Mostrar el modal
+}
+
+function closePetDetails() {
+    document.getElementById('petDetails').style.display = 'none';
 }
 
 function populatePetSelector(pets) {
@@ -84,8 +118,6 @@ function populatePetSelector(pets) {
 
 function showAddPetForm() {
     showContainer('addPetForm'); // Muestra el formulario de agregar mascota
-    
-
     showPagination(false); // Oculta la paginación porque es un formulario
 }
 
@@ -148,67 +180,120 @@ async function editPet(id, nombre, raza, tipo, color, tamaño, edad, sexo, pedig
     document.getElementById('addPetForm').style.display = 'block';
 }
 
-async function removePet(id) {
-    const token = getToken();
-    const response = await fetch(`/api/pets/${id}`, {
-        method: 'DELETE',
-        headers: { 'Authorization': `Bearer ${token}` }
-    });
+function removePet(id) {
+    const modal = document.getElementById('confirmModal');
+    const confirmButton = document.getElementById('confirmDelete');
+    const cancelButton = document.getElementById('cancelDelete');
 
-    if (response.ok) {
-        alert('Mascota eliminada exitosamente.');
-        fetchPets(); // Refrescar la lista de mascotas
-    } else {
-        const errorData = await response.json();
-        alert(`Error al eliminar mascota: ${errorData.error}`);
-    }
+    // Muestra el modal sobre los detalles de la mascota
+    modal.style.display = 'flex';
+
+    // Si el usuario cancela, oculta el modal sin cerrar los detalles
+    cancelButton.onclick = () => {
+        modal.style.display = 'none';
+    };
+
+    // Si el usuario confirma, procede con la eliminación
+    confirmButton.onclick = async () => {
+        modal.style.display = 'none';
+
+        const token = getToken();
+        try {
+            const response = await fetch(`/api/pets/${id}`, {
+                method: 'DELETE',
+                headers: { 'Authorization': `Bearer ${token}` }
+            });
+
+            if (response.ok) {
+                alert('Mascota eliminada exitosamente.');
+                closePetDetails(); // Ahora sí cerramos los detalles después de eliminar
+                fetchPets(); // Refresca la lista de mascotas
+            } else {
+                const errorData = await response.json();
+                alert(`Error al eliminar mascota: ${errorData.error}`);
+            }
+        } catch (error) {
+            alert('Error de conexión. Intenta nuevamente.');
+        }
+    };
 }
 
-////// Paginacion ///////
-let currentPage = 1; // Página actual
-const limitPerPage = 20; // Elementos por página
+////// Paginación y Busqueda ///////
+let currentPage = 1; 
+const limitPerPage = 20; 
 
-// Función para manejar la búsqueda
-function handleSearch() {
-    const searchQuery = document.getElementById('searchInput').value.trim(); // Obtener el texto de búsqueda
-    fetchAllPets(1, limitPerPage, searchQuery); // Realizar la búsqueda con el término de búsqueda
-}
-
-// Función para obtener todas las mascotas (con filtrado)
-async function fetchAllPets(page = 1, limit = limitPerPage, searchQuery = '') {
-    currentPage = page; // Actualizar la página actual
-    showContainer('requestContainer'); // Mostrar el contenedor de solicitudes
+// Función para obtener todas las mascotas con paginación
+async function fetchAllPets(page = 1, limit = limitPerPage) {
+    currentPage = page;
+    showContainer('requestContainer');
     const token = getToken();
     
-    // Construir la URL con los parámetros de búsqueda
-    let url = `/api/pets?page=${page}&limit=${limit}`;
-    if (searchQuery) url += `&query=${encodeURIComponent(searchQuery)}`; // Pasar el término de búsqueda
+    const url = `/api/pets?page=${page}&limit=${limit}`;
 
-    // Realizar la solicitud para obtener las mascotas
-    const response = await fetch(url, {
-        method: 'GET',
-        headers: { 'Authorization': `Bearer ${token}` }
-    });
+    try {
+        const response = await fetch(url, {
+            method: 'GET',
+            headers: { 'Authorization': `Bearer ${token}` }
+        });
 
-    if (response.ok) {
+        if (!response.ok) {
+            if (response.status === 401) {
+                alert('Sesión expirada. Inicia sesión nuevamente.');
+                window.location.href = './index.html';
+                return;
+            }
+            const errorMsg = await response.text();
+            alert(`Error: ${response.status} - ${errorMsg}`);
+            return;
+        }
+
         const data = await response.json();
-        const allPets = data.pets; // Mascotas filtradas
-        const totalPets = data.total; // Total de mascotas filtradas
-        displayAllPets(allPets); // Mostrar las mascotas filtradas
-        renderPagination(totalPets, limit, currentPage, 'fetchAllPets'); // Paginación
-    } else {
-        alert(`Error al obtener las mascotas.`);
+        displayAllPets(data.pets);
+        renderPagination(data.total, limit, currentPage, fetchAllPets);
+    } catch (error) {
+        alert(`Error al conectar con el servidor.`);
     }
-    document.getElementById('addPetForm').style.display = 'none';
-    document.getElementById('petsContainer').style.display = 'none';
 }
 
-// Función para mostrar las mascotas
+// Función para buscar mascotas con la barra de búsqueda
+async function fetchPetsSearch(page = 1, limit = limitPerPage) {
+    const searchQuery = document.getElementById('searchInput').value.trim();
+    if (!searchQuery) {
+        fetchAllPets(1, limitPerPage); // Si está vacío, vuelve a la lista original
+        return;
+    }
+
+    currentPage = page;
+    showContainer('requestContainer'); 
+    const token = getToken();
+    
+    const url = `/api/pets/search?page=${page}&limit=${limit}&query=${encodeURIComponent(searchQuery)}`;
+
+    try {
+        const response = await fetch(url, {
+            method: 'GET',
+            headers: { 'Authorization': `Bearer ${token}` }
+        });
+
+        if (!response.ok) {
+            alert(`Error: ${response.status}`);
+            return;
+        }
+
+        const data = await response.json();
+        displayAllPets(data.pets);
+        renderPagination(data.total, limit, currentPage, fetchPetsSearch);
+    } catch (error) {
+        alert(`Error al conectar con el servidor.`);
+    }
+}
+
+// Función para mostrar mascotas en pantalla
 function displayAllPets(pets) {
     const container = document.getElementById('allPetsTable');
-    container.innerHTML = ''; // Limpiar contenedor antes de agregar nuevas mascotas
+    container.innerHTML = ''; 
     if (pets.length > 0) {
-        const petList = pets.map(pet => `
+        container.innerHTML = pets.map(pet => `
             <div class="pet-card">
                 <h3>${pet.nombre}</h3>
                 <p><strong>Raza:</strong> ${pet.raza}</p>
@@ -222,33 +307,36 @@ function displayAllPets(pets) {
                 </div>
             </div>
         `).join('');
-        container.innerHTML = petList; // Mostrar las mascotas
     } else {
         container.innerHTML = `<div style="text-align: center; padding: 20px;">No se encontraron mascotas disponibles.</div>`;
     }
 }
 
-// Función de paginación (sin cambios)
-function renderPagination(totalItems, limit, currentPage, callbackName) {
+// Función de paginación
+function renderPagination(totalItems, limit, currentPage, callback) {
     const totalPages = Math.ceil(totalItems / limit);
     const paginationContainer = document.getElementById('paginationContainer');
 
-    paginationContainer.innerHTML = ''; // Limpiar contenido previo
+    paginationContainer.innerHTML = '';
     paginationContainer.style.display = totalPages > 1 ? 'flex' : 'none';
 
     if (totalPages > 1) {
-        const visibleRange = 5; // Cantidad de páginas visibles
+        const visibleRange = 5;
         let startPage = Math.max(1, currentPage - Math.floor(visibleRange / 2));
         let endPage = Math.min(totalPages, currentPage + Math.floor(visibleRange / 2));
 
         for (let i = startPage; i <= endPage; i++) {
             paginationContainer.innerHTML += `
-                <a href="#" class="${i === currentPage ? 'active' : ''}" onclick="${callbackName}(${i})">${i}</a>
+                <a href="#" class="${i === currentPage ? 'active' : ''}" onclick="${callback.name}(${i}, ${limit})">${i}</a>
             `;
         }
     }
 }
 
+// Detectar cambios en la barra de búsqueda
+document.getElementById('searchInput').addEventListener('input', () => {
+    fetchPetsSearch();
+});
 
 //////// Solicitudes /////////
 async function sendRequest(mascotaSolicitadaId, usuarioSolicitadoId) {

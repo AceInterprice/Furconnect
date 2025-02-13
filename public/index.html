@@ -98,33 +98,38 @@
             const email = document.getElementById('email').value;
             const password = document.getElementById('password').value;
 
-            // Llamada a la API para iniciar sesión
-            const response = await fetch('/api/login', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify({ email, password })
-            });
+            try {
+                // Llamada a la API para iniciar sesión
+                const response = await fetch('/api/login', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({ email, password })
+                });
 
-            if (response.ok) {
                 const data = await response.json();
-                
-                // Almacenar el token en localStorage
-                const token = data.token;
-                const user = data.user
-                localStorage.setItem('token', token);
-                localStorage.setItem('userID', user.id)
 
-                // Mostrar el token y mensaje de éxito
-                document.getElementById('tokenContainer').textContent = `Token almacenado: ${token}`;
-                document.getElementById('message').textContent = 'Login exitoso!';
+                if (response.ok && data.token) {
+                    localStorage.setItem('token', data.token);
+                    localStorage.setItem('userID', data.user.id); 
+                    localStorage.setItem('role', data.user.role);
 
-                // Redirigir a la página de listado de mascotas después del login exitoso
-                window.location.href = './content/consultas.html'; 
-            } else {
-                const errorData = await response.json();
-                document.getElementById('message').textContent = `Error: ${errorData.error}`;
+                    // Mostrar el token y mensaje de éxito
+                    document.getElementById('tokenContainer').textContent = `Token almacenado: ${data.token}`;
+                    document.getElementById('message').textContent = 'Login exitoso!';
+
+                    if (data.user.role === 'admin') {
+                        window.location.href = "./content/admin.html";
+                    } else {
+                        window.location.href = "./content/consultas.html";
+                    }
+                } else {
+                    alert("Error: " + (data.message || "Credenciales incorrectas."));
+                }
+            } catch (error) {
+                console.error('Error:', error);
+                alert("Error en la conexión con el servidor.");
             }
         });
     </script>

@@ -1,7 +1,7 @@
 import { Router } from 'express';
 import { listPets, getOnePet, getPetsByOwner, addPet, removePet, updatePet, searchPets } from '../controllers/pets.controller.js';
 import { verifyToken } from '../middlewares/auth.middleware.js';
-
+import upload from "../middlewares/upload.middleware.js";
 const router = Router();
 
 /**
@@ -148,7 +148,7 @@ router.get('/api/pets/owner/:ownerId', verifyToken, getPetsByOwner);
  *       400:
  *         description: Error en los datos enviados.
  */
-router.post('/api/newpet', verifyToken, addPet);
+router.post('/api/newpet', upload.single("imagen") ,verifyToken, addPet);
 
 /**
  * @swagger
@@ -177,7 +177,7 @@ router.post('/api/newpet', verifyToken, addPet);
  *       400:
  *         description: Error en los datos enviados.
  */
-router.put('/api/updatepet/:id', verifyToken, updatePet);
+router.put('/api/updatepet/:id', upload.single("imagen"),verifyToken, updatePet);
 
 /**
  * @swagger

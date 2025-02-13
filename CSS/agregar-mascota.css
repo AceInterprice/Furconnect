@@ -1,0 +1,144 @@
+/* Reset básico de márgenes y padding */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+/* Cuerpo centrado */
+body {
+    font-family: Arial, sans-serif;
+    background-color: rgba(107, 94, 80, 0.5); /* #6B5E50 con opacidad al 50% */
+    display: flex;              /* Para centrar el contenedor en pantalla */
+    justify-content: center;    /* Centra horizontalmente */
+    align-items: center;        /* Centra verticalmente */
+    height: 100vh;              /* Ocupa toda la altura de la ventana */
+}
+
+/* Contenedor principal */
+.container {
+    display: flex;              /* Flexbox para colocar formulario e imagen en la misma fila */
+    background-color: #FFFFFF;
+    border-radius: 10px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    overflow: hidden;
+    width: 100%;                /* Ajustado a 100% para aprovechar el ancho disponible */
+    max-width: 800px;           /* Limita el ancho máximo */
+    height: 650px;              /* Altura fija (puedes cambiar a auto si prefieres) */
+    margin: 0 auto;             /* Centra horizontalmente en caso de que no uses display flex en body */
+}
+
+/* Sección de imagen (a la derecha, depende del orden en el HTML) */
+.image-section {
+    flex: 1;                    /* La imagen ocupa la mitad del contenedor */
+    display: flex;
+    justify-content: center;    /* Centra la imagen horizontalmente */
+    align-items: center;        /* Centra la imagen verticalmente */
+    background-color: #E8A761;  /* Café intermedio */
+    width: 100%;
+    height: 100%;
+}
+
+.image-section img {
+    width: 150%;
+    height: 150%;
+    object-fit: cover;          /* Mantiene la relación de aspecto */
+}
+
+/* Contenedor de formulario */
+.login-container {
+    flex: 1;                    /* El formulario ocupa la otra mitad del contenedor */
+    padding: 10px;
+    text-align: center;
+    max-width: 400px;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;    /* Centra verticalmente el contenido */
+}
+
+/* Título del formulario */
+.login-container h2 {
+    margin-bottom: 10px;
+    color: #AF5D0A;             /* Café oscuro */
+    font-size: 20px;
+}
+
+/* Estilo para los campos de entrada y select */
+.login-container input,
+.login-container select {
+    width: 100%;
+    padding: 8px;
+    margin: 8px 0;             /* Separación vertical */
+    border: 1px solid #E8A761; /* Borde café intermedio */
+    border-radius: 5px;
+    box-sizing: border-box;
+}
+
+/* Botón principal */
+.login-container button {
+    width: 100%;
+    background-color: #AF5D0A; /* Café oscuro */
+    color: white;
+    padding: 8px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 16px;
+}
+
+/* Efecto hover en el botón */
+.login-container button:hover {
+    background-color: #FFA849; /* Café tipo naranja */
+}
+
+/* Ejemplo de estilo para checkbox, íconos sociales o enlaces (opcional) */
+.login-container .terms {
+    font-size: 12px;
+    color: #555;
+    margin: 8px 0;
+}
+
+.login-container .register {
+    margin-top: 10px;
+    font-size: 14px;
+}
+
+.login-container .register a {
+    color: #AF5D0A;
+    text-decoration: none;
+}
+
+.login-container .register a:hover {
+    text-decoration: underline;
+}
+
+.social-icons {
+    margin-top: 20px;
+}
+
+.social-icons img {
+    width: 50px;
+    height: 50px;
+    margin: 0 10px;
+}
+
+/* Diseño responsivo para pantallas pequeñas */
+@media (max-width: 768px) {
+    .container {
+        flex-direction: column; /* Apila formulario e imagen en columna */
+        width: 90%;
+        height: auto;          /* Ajusta la altura automáticamente */
+    }
+    
+    /* Si no quieres ocultar la imagen en móvil, elimina la siguiente línea */
+    .image-section {
+        display: none;
+    }
+    
+    .login-container {
+        padding: 15px;
+        height: auto;
+    }
+}

@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Agregar Mascota</title>
+  <!-- Asegúrate de apuntar correctamente a tu archivo CSS -->
+  <link rel="stylesheet" href="/CSS/agregar-mascota.css">
+</head>
+<body>
+  <div class="container">
+    <!-- Primero el formulario (login-container) -->
+    <div class="login-container">
+      <h2>Agregar Mascota</h2>
+      
+      <!-- Nombre de la mascota -->
+      <div style="position: relative; margin-bottom: 10px;">
+        <input type="text" placeholder="Nombre de la mascota" style="padding-left: 30px;">
+      </div>
+
+      <!-- Subir foto -->
+      <div style="text-align: left; margin-bottom: 10px;">
+        <label for="foto">Subir foto:</label>
+        <input type="file" id="foto" name="foto" style="width: 100%;">
+      </div>
+
+      <!-- Raza -->
+      <div style="position: relative; margin-bottom: 10px;">
+        <input type="text" placeholder="Raza" style="padding-left: 30px;">
+      </div>
+
+      <!-- Tipo (Perro, Gato, etc.) -->
+      <div style="position: relative; margin-bottom: 10px;">
+        <input type="text" placeholder="Tipo" style="padding-left: 30px;">
+      </div>
+
+      <!-- Color -->
+      <div style="position: relative; margin-bottom: 10px;">
+        <input type="text" placeholder="Color" style="padding-left: 30px;">
+      </div>
+
+      <!-- Tamaño -->
+      <div style="position: relative; margin-bottom: 10px;">
+        <input type="text" placeholder="Tamaño" style="padding-left: 30px;">
+      </div>
+
+      <!-- Edad -->
+      <div style="position: relative; margin-bottom: 10px;">
+        <input type="number" placeholder="Edad" style="padding-left: 30px;">
+      </div>
+
+      <!-- Sexo -->
+      <div style="position: relative; margin-bottom: 10px;">
+        <select style="width: 100%; padding: 8px; margin: 8px 0; border: 1px solid #E8A761; border-radius: 5px; box-sizing: border-box;">
+          <option value="" disabled selected>Sexo</option>
+          <option value="Macho">Macho</option>
+          <option value="Hembra">Hembra</option>
+        </select>
+      </div>
+
+      <!-- Temperamento -->
+      <div style="position: relative; margin-bottom: 10px;">
+        <input type="text" placeholder="Temperamento" style="padding-left: 30px;">
+      </div>
+
+      <!-- Botón de Agregar -->
+      <button type="submit">Agregar</button>
+    </div>
+    
+    <!-- Luego la sección de imagen (image-section) -->
+    <div class="image-section">
+      <!-- Cambia la ruta de la imagen a la que prefieras -->
+      <img src="/img/ver2fru.jpg" alt="Imagen de mascota">
+    </div>
+  </div>
+</body>
+</html>

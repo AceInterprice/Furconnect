@@ -1,0 +1,260 @@
+/* Estilos generales */
+body {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+    line-height: 1.6;
+    background-color: #F5C086; /* Café bajo */
+    color: #333;
+}
+
+header {
+    background-color: #AF5D0A; /* Café oscuro */
+    color: #fff;
+    padding: 20px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+header h1 {
+    margin: 0;
+    font-size: 2.5em;
+}
+
+.login-button {
+    background-color: #FFA849; /* Café tipo naranja */
+    color: #fff;
+    border: none;
+    padding: 10px 20px;
+    font-size: 1em;
+    cursor: pointer;
+    border-radius: 5px;
+}
+
+.hero {
+    background-color: #ffffff; /* Café intermedio */
+    color: #000000;
+    padding: 90px 20px; /* Aumentar padding */
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.hero-content {
+    width: 60%;
+    text-align: center; /* Centrar el texto */
+}
+
+.hero h2 {
+    font-size: 2em;
+    margin-bottom: 30px; /* Aumentar margen inferior */
+}
+
+.hero p {
+    font-size: 1.2em;
+    margin-bottom: 30px; /* Aumentar margen inferior */
+}
+
+.buttons {
+    display: flex;
+    gap: 20px; /* Aumentar espacio entre botones */
+    justify-content: center; /* Centrar botones */
+}
+
+.buttons button {
+    background-color: #000000; /* Café tipo naranja */
+    color: #fff;
+    border: none;
+    padding: 10px 30px; /* Aumentar padding */
+    font-size: 1em;
+    cursor: pointer;
+    border-radius: 5px;
+}
+
+.features {
+    display: flex;
+    justify-content: space-around;
+    padding: 60px 20px; /* Aumentar padding */
+    background-color: #F5C086; /* Café bajo */
+}
+
+.feature {
+    text-align: center;
+    width: 45%;
+    background-color: #E8A761; /* Café intermedio */
+    padding: 90px; /* Aumentar padding */
+    border-radius: 10px;
+    color: #fff;
+}
+
+.feature .image-placeholder {
+    margin: 0 auto 10px auto; /* Aumentar margen inferior */
+    width: 80%;
+    height: 150px; /* Altura fija para el marcador de imagen */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: #ffffff; /* Café tipo naranja */
+    border-radius: 50px;
+}
+
+.feature h3 {
+    font-size: 1.5em;
+    margin-bottom: 20px; /* Aumentar margen inferior */
+}
+
+.feature p {
+    font-size: 1.1em;
+}
+
+.offer {
+    padding: 60px 20px; /* Aumentar padding */
+    background-color: #ffffff; /* Café intermedio */
+    text-align: center;
+}
+
+.offer h2 {
+    font-size: 2em;
+    margin-bottom: 40px; /* Aumentar margen inferior */
+    color: #000000;
+    padding: 50px;
+}
+
+.offer-list {
+    display: flex;
+    justify-content: space-around;
+    flex-wrap: wrap;
+}
+
+.offer-item {
+    width: 30%;
+    margin-bottom: 40px; /* Aumentar margen inferior */
+    background-color: #F5C086; /* Café bajo */
+    padding: 30px; /* Aumentar padding */
+    border-radius: 10px;
+    color: #333;
+    text-align: center;
+}
+
+.offer-item .image-placeholder {
+    margin: 0 auto 30px auto; /* Aumentar margen inferior */
+    width: 80%;
+    height: 150px; /* Altura fija para el marcador de imagen */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: #ffffff; /* Café tipo naranja */
+    border-radius: 10px;
+}
+
+.offer-item h3 {
+    font-size: 1.5em;
+    margin-bottom: 20px; /* Aumentar margen inferior */
+}
+
+.offer-item p {
+    font-size: 1.1em;
+}
+
+.cta {
+    background-color: #AF5D0A; /* Café oscuro */
+    color: #fff;
+    padding: 60px 50px; /* Aumentar padding */
+    text-align: center;
+    margin-bottom: 100px; /* Margen inferior para separar del footer */
+}
+
+.cta h2 {
+    font-size: 2em;
+    margin-bottom: 50px; /* Aumentar margen inferior */
+}
+
+.cta .buttons {
+    display: flex;
+    gap: 50px; /* Aumentar espacio entre botones */
+    justify-content: center; /* Centrar botones */
+}
+
+footer {
+    background-color: #F5C086; /* Café oscuro */
+    color: #fff;
+    text-align: center;
+    padding: 15px 0; /* Aumentar padding */
+    position: relative;
+    bottom: 0;
+    width: 100%;
+    bottom: 50px;
+}
+
+.image-placeholder {
+    background-color: #FFA849; /* Café tipo naranja */
+    color: #fff;
+    padding: 50px;
+    width: 35%;
+    text-align: center;
+    border-radius: 10px;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    .hero {
+        flex-direction: column;
+        text-align: center;
+    }
+
+    .hero-content {
+        width: 100%;
+    }
+
+    .image-placeholder {
+        width: 80%;
+        margin-top: 20px;
+    }
+
+    .features, .offer-list {
+        flex-direction: column;
+        align-items: center;
+    }
+
+    .feature, .offer-item {
+        width: 80%;
+    }
+
+    .buttons {
+        flex-direction: column;
+        align-items: center;
+    }
+
+    .buttons button {
+        width: 100%;
+        margin-bottom: 10px;
+    }
+
+    header {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+
+    .login-button {
+        margin-top: 10px;
+    }
+
+    .social-icons {
+        margin-top: 10px;
+    }
+    
+    .social-icons a {
+        margin: 0 10px;
+        display: inline-block;
+        display: flex;
+        justify-content: center; /* Centrar los iconos */
+        align-items: center;
+        gap: 20px; /* Espaciado entre iconos */
+        margin-right: 15px; /* Espaciado a la derecha */
+    }
+
+    .icon {
+        padding: 15px; /* Espaciado interno */
+    }
+}

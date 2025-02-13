@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Agregar Mascota</title>
+  <link rel="stylesheet" href="/CSS/editar-pet.css">
+</head>
+<body>
+  <div class="container">
+    <div class="form-section">
+      <h2>Editar Mascota</h2>
+      
+      <div class="input-group">
+        <input type="text" placeholder="Nombre mascota">
+        <label for="foto" class="file-label">📷</label>
+        <input type="file" id="foto" class="file-input">
+      </div>
+
+      <input type="text" placeholder="Raza">
+      <input type="text" placeholder="Tipo">
+      <div class="inline-inputs">
+        <input type="text" placeholder="Color">
+        <input type="text" placeholder="Tamaño">
+      </div>
+      <div class="inline-inputs">
+        <input type="number" placeholder="Edad">
+        <select>
+          <option value="" disabled selected>Sexo</option>
+          <option value="Macho">Macho</option>
+          <option value="Hembra">Hembra</option>
+        </select>
+      </div>
+      <input type="text" placeholder="Temperamento">
+
+      <div class="buttons">
+        <button class="cancel">Cancelar</button>
+        <button class="accept">Aceptar</button>
+      </div>
+    </div>
+    
+    <div class="image-section">
+      <img src="/img/edit2.jpg" alt="">
+      <h1 class="logo"></h1>
+    </div>
+  </div>
+</body>
+</html>

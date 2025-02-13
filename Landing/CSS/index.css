@@ -196,6 +196,10 @@ footer {
     border-radius: 10px;
 }
 
+.logo {
+    height: 80px; /* Ajusta el tamaño según necesites */
+    width: auto;
+}
 /* Responsive Design */
 @media (max-width: 768px) {
     .hero {

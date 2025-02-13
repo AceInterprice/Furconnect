@@ -41,8 +41,7 @@ body {
 
 .image-section img {
     width: 150%;
-    height: 150%;
-    object-fit: cover;          /* Mantiene la relación de aspecto */
+    height: 115%;
 }
 
 /* Contenedor de formulario */

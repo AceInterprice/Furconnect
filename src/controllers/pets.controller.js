@@ -67,7 +67,7 @@ export const getPetsByOwner = async (req, res) => {
         const ownerId = req.params.ownerId;
         const pets = await getPetsByOwnerId(ownerId);
         if (pets.length === 0) {
-            return res.status(404).json({ message: 'No se encontraron mascotas para este usuario' });
+            return res.status(204).json({ message: 'No se encontraron mascotas para este usuario' });
         }
         res.status(200).json(pets);
     } catch (error) {

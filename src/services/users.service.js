@@ -14,7 +14,7 @@ export const getUserById = async (id) => {
 };
 
 // Crear un nuevo usuario
-export const createUser = async (nombre, email, password, telefono, ciudad, estado, pais, role = 'user') => {
+export const createUser = async (nombre, apellido, email, password, telefono, ciudad, estado, pais, role = 'user') => {
     const userExist = await User.findOne({ email }); // Verifica si el correo ya está registrado
     if (userExist) throw new Error('El correo electrónico ya está registrado.');
 
@@ -28,7 +28,7 @@ export const createUser = async (nombre, email, password, telefono, ciudad, esta
     const hashedPassword = await bcrypt.hash(password, 10);
 
     // Crea un nuevo usuario
-    const newUser = new User({ nombre, email, password: hashedPassword, telefono, ciudad, estado, pais, role });
+    const newUser = new User({ nombre, apellido, email, password: hashedPassword, telefono, ciudad, estado, pais, role });
 
     await newUser.save(); // Guarda el nuevo usuario en la base de datos
     return newUser;
@@ -53,6 +53,7 @@ export const loginUsers = async (email, password) => {
         user: {
             id: user._id,
             nombre: user.nombre,
+            apellido: user.apellido,
             email: user.email,
             telefono: user.telefono,
             ciudad: user.ciudad,
@@ -64,11 +65,12 @@ export const loginUsers = async (email, password) => {
 };
 
 // Actualizar un usuario por ID
-export const updateUserById = async (id, nombre, email, password, telefono, ciudad, estado, pais) => {
+export const updateUserById = async (id, nombre, apellido, email, password, telefono, ciudad, estado, pais) => {
     const user = await User.findById(id); // Busca el usuario por ID
     if (!user) return null;
 
     user.nombre = nombre;
+    user.apellido = apellido;
     user.email = email;
     user.telefono = telefono;
     user.ciudad = ciudad;

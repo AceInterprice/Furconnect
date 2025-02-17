@@ -32,7 +32,7 @@ async function fetchPets() {
         if (!response.ok) {
             if (response.status === 401) {
                 alert('Sesión expirada. Inicia sesión nuevamente.');
-                window.location.href = './index.html';
+                window.location.href = '../index.html';
                 return;
             }
             const errorMsg = await response.text();
@@ -63,7 +63,9 @@ function displayUserPets(pets) {
                         </span>
                     </div>
                     <p><strong>Raza:</strong> ${pet.raza}</p>
+                    <p><strong>Tipo:</strong> ${pet.tipo}</p>
                     <p><strong>Edad:</strong> ${pet.edad} años</p>
+                    <p><strong>Temperamento:</strong> ${pet.temperamento}</p>
                 </div>
             </div>`
         ).join('');
@@ -121,6 +123,18 @@ function showAddPetForm() {
     showPagination(false); // Oculta la paginación porque es un formulario
 }
 
+document.getElementById("petImagen").addEventListener("change", function(event) {
+    const file = event.target.files[0];
+    if (file) {
+        const reader = new FileReader();
+        reader.onload = function(e) {
+            const imagePreview = document.getElementById("imagePreview");
+            imagePreview.src = e.target.result;
+            imagePreview.style.display = "block";
+        };
+        reader.readAsDataURL(file);
+    }
+});
 
 document.getElementById('addPetForm').addEventListener('submit', async function(event) {
     event.preventDefault();
@@ -163,7 +177,7 @@ document.getElementById('addPetForm').addEventListener('submit', async function(
     }
 });
 
-async function editPet(id, nombre, raza, tipo, color, tamaño, edad, sexo, pedigree, temperamento, vacunas, media) {
+async function editPet(id, nombre, raza, tipo, color, tamaño, edad, sexo, pedigree, temperamento, vacunas, media, imagen) {
     document.getElementById('formTitle').textContent = 'Editar Mascota';
     document.getElementById('petId').value = id;
     document.getElementById('petName').value = nombre;
@@ -177,8 +191,17 @@ async function editPet(id, nombre, raza, tipo, color, tamaño, edad, sexo, pedig
     document.getElementById('petTemperamento').value = temperamento;
     document.getElementById('petVacunas').value = vacunas;
     document.getElementById('petMedia').value = media;
+
+    // Verificar si hay una imagen existente y mostrarla en la vista previa
+    if (imagen) {
+        const imagePreview = document.getElementById("imagePreview");
+        imagePreview.src = imagen;
+        imagePreview.style.display = "block";
+    }
+
     document.getElementById('addPetForm').style.display = 'block';
 }
+
 
 function removePet(id) {
     const modal = document.getElementById('confirmModal');

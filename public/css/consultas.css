@@ -1,10 +1,9 @@
 /* consultas.css */
-
 body {
     font-family: Arial, sans-serif;
     margin: 0;
     padding: 0;
-    background-color: #e6f5e9; /* Suave fondo verde claro */
+    background-color: #e6f5e9;
     color: #333;
 }
 /* Barra de menu*/
@@ -83,7 +82,6 @@ body {
 }
 
 .card button {
-    background-color: #4c8c4a; /* Verde medio */
     color: white;
     border: none;
     padding: 10px;
@@ -127,24 +125,47 @@ body {
 
 /* Títulos */
 h1, h3, h2 {
-    color: #2a5934; /* Verde oscuro */
     text-align: center;
     font-weight: bold;
 }
+/* Contenedor del formulario */
+.content-container {
+    background: white;
+    border-radius: 10px;
+    padding: 20px;
+    width: 90%;
+    max-width: 400px; /* Tamaño fijo */
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    position: relative;
+    animation: fadeIn 0.3s ease-in-out;
+}
 
-/* Estilo del formulario como modal */
-#addPetForm {
-    display: none; /* Oculto por defecto */
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background: rgba(0, 0, 0, 0.5); /* Fondo oscuro */
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    z-index: 2000; /* Más alto que showDetails */
+/* Animación de entrada */
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: scale(0.9);
+    }
+    to {
+        opacity: 1;
+        transform: scale(1);
+    }
+}
+
+/* Botón de cerrar */
+.close-edit-btn {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    font-size: 20px;
+    background: none;
+    border: none;
+    cursor: pointer;
+    color: #333;
+}
+
+.close-edit-btn:hover {
+    transform: scale(1.2);
 }
 
 /* Contenedor del formulario */
@@ -199,14 +220,9 @@ h1, h3, h2 {
 }
 
 .content-container button {
-    background-color: #4c8c4a;
     color: white;
     cursor: pointer;
     transition: background 0.3s;
-}
-
-.content-container button:hover {
-    background-color: #76b27c;
 }
 
 /* Estilos para formularios de Encuentro y Seguimiento */

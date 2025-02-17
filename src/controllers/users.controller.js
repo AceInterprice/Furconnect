@@ -33,8 +33,17 @@ export const listUsers = async (req, res) => {
 // Obtener un usuario por ID
 export const getUser = async (req, res) => {
     try {
-        const user = await getUserById(req.params.id);
+        const { id } = req.params; // ID del usuario solicitado
+        const { id: requesterId, role: requesterRole } = req.user; // ID y rol del usuario logueado
+
+        // Verificar si el usuario logueado es dueño del perfil o es administrador
+        if (requesterId !== id && requesterRole !== 'admin') {
+            return res.status(403).json({ error: "No tienes permiso para ver este perfil" });
+        }
+
+        const user = await getUserById(id);
         if (!user) return res.status(404).json({ message: 'Usuario no encontrado' });
+
         res.status(200).json(user);
     } catch (error) {
         res.status(500).json({ error: error.message });
@@ -44,8 +53,14 @@ export const getUser = async (req, res) => {
 // Agregar un nuevo usuario
 export const addUser = async (req, res) => {
     try {
-        const { nombre, email, password, telefono, ciudad, estado, pais, role } = req.body; 
-        const newUser = await createUser(nombre, email, password, telefono, ciudad, estado, pais, role);
+        const { nombre, apellido, email, password, telefono, ciudad, estado, pais, role } = req.body; 
+
+        // Validación: Asegurar que los campos obligatorios están completos
+        if (!nombre || !apellido || !email || !password || !telefono || !ciudad || !estado || !pais) {
+            return res.status(400).json({ error: "Todos los campos obligatorios deben completarse." });
+        }
+
+        const newUser = await createUser(nombre, apellido, email, password, telefono, ciudad, estado, pais, role);
         res.status(201).json({ message: 'Usuario creado', user: newUser });
     } catch (error) {
         res.status(400).json({ error: error.message });
@@ -71,9 +86,19 @@ export const loginUser = async (req, res) => {
 // Actualizar un usuario
 export const updateUser = async (req, res) => {
     try {
-        const { nombre, email, password, telefono, ciudad, estado, pais } = req.body;
-        const updatedUser = await updateUserById(req.params.id, nombre, email, password, telefono, ciudad, estado, pais);
+        const { id } = req.params; // ID del usuario a actualizar
+        const { id: requesterId, role: requesterRole } = req.user; // ID y rol del usuario logueado
+
+        // Verificar si el usuario logueado es dueño del perfil o es administrador
+        if (requesterId !== id && requesterRole !== 'admin') {
+            return res.status(403).json({ error: "No tienes permiso para actualizar este perfil" });
+        }
+
+        const { nombre, apellido, email, password, telefono, ciudad, estado, pais } = req.body;
+        const updatedUser = await updateUserById(id, nombre, apellido, email, password, telefono, ciudad, estado, pais);
+
         if (!updatedUser) return res.status(404).json({ message: 'Usuario no encontrado' });
+
         res.status(200).json({ message: 'Usuario actualizado', user: updatedUser });
     } catch (error) {
         res.status(500).json({ error: error.message });

@@ -3,118 +3,79 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Registro de Usuarios</title>
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            background-color: #f9f9f9;
-            margin: 0;
-            padding: 20px;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            height: 100vh;
-        }
-        #registerForm {
-            background-color: white;
-            border-radius: 8px;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-            padding: 20px;
-            width: 300px;
-        }
-        #registerForm h3 {
-            color: #333;
-            margin-bottom: 15px;
-        }
-        #registerForm input[type="text"],
-        #registerForm input[type="email"],
-        #registerForm input[type="password"] {
-            width: 100%;
-            padding: 10px;
-            margin: 10px 0;
-            border: 1px solid #ccc;
-            border-radius: 4px;
-            box-sizing: border-box;
-        }
-        #registerForm button {
-            background-color: #4CAF50;
-            color: white;
-            padding: 10px;
-            border: none;
-            border-radius: 4px;
-            cursor: pointer;
-            width: 100%;
-            font-size: 16px;
-        }
-        #registerForm button:hover {
-            background-color: #45a049;
-        }
-        #message {
-            color: #e74c3c;
-            text-align: center;
-            margin-top: 10px;
-        }
-    </style>
+    <title>FurConnect - Registro</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <link rel="stylesheet" href="../css/registro.css">
 </head>
 <body>
-    <div id="registerForm">
-        <a id="devolver" href="/"><button>Inicio</button></a>
-        <h3>Registrar Nuevo Usuario</h3>
-        <input type="text" id="userName" placeholder="Nombre" required><br>
-        <input type="email" id="userEmail" placeholder="Email" required><br>
-        <input type="password" id="userPassword" placeholder="Contraseña" required><br>
-        <input type="text" id="userPhone" placeholder="Teléfono (10 dígitos)"><br>
-        <input type="text" id="userCity" placeholder="Ciudad"><br>
-        <input type="text" id="userState" placeholder="Estado" required><br>
-        <input type="text" id="userCountry" placeholder="País" required><br>
-        <button type="submit" id="registerButton">Registrar</button>
-        <div id="message"></div>
+    <div class="container">
+        <!-- Sección de imagen -->
+        <div class="image-section">
+        </div>
+
+        <!-- Sección del formulario -->
+        <div class="form-section">
+            <h2>Crear cuenta</h2>
+            <form id="registerForm">
+                <div class="grid-container">
+                    <div class="input-group">
+                        <i class="fas fa-user"></i>
+                        <input type="text" id="userName" placeholder="Nombre(s)" required>
+                    </div>
+                    <div class="input-group">
+                        <i class="fas fa-user"></i>
+                        <input type="text" id="userLastName" placeholder="Apellidos" required>
+                    </div>
+                    <div class="input-group">
+                        <i class="fas fa-envelope"></i>
+                        <input type="email" id="userEmail" placeholder="Correo Electrónico" required>
+                    </div>
+                    <div class="input-group">
+                        <i class="fas fa-lock"></i>
+                        <input type="password" id="userPassword" placeholder="Contraseña" required>
+                    </div>
+                    <div class="input-group">
+                        <i class="fas fa-lock"></i>
+                        <input type="password" id="confirmPassword" placeholder="Confirmar contraseña" required>
+                    </div>
+                    <div class="input-group">
+                        <i class="fas fa-phone"></i>
+                        <input type="text" id="userPhone" placeholder="Número de teléfono">
+                    </div>
+                    <div class="input-group">
+                        <i class="fas fa-map-marker-alt"></i>
+                        <input type="text" id="userState" placeholder="Estado" required>
+                    </div>
+                    <div class="input-group">
+                        <i class="fas fa-globe"></i>
+                        <input type="text" id="userCountry" placeholder="País" required>
+                    </div>
+                    <div class="input-group">
+                        <i class="fas fa-city"></i>
+                        <input type="text" id="userCity" placeholder="Localidad">
+                    </div>
+                </div>
+
+                <div class="checkbox-group">
+                    <input type="checkbox" id="terms" required>
+                    <label for="terms">Acepto todos los <a href="#">términos y condiciones</a></label>
+                </div>
+
+                <button type="submit" class="btn-register">Crear cuenta</button>
+            </form>
+
+            <div class="social-login">
+                <p>O inicia sesión con</p>
+                <div class="social-icons">
+                    <button class="google-btn"><i class="fab fa-google"></i></button>
+                    <button class="facebook-btn"><i class="fab fa-facebook-f"></i></button>
+                </div>
+            </div>
+
+            <p>¿Ya tienes una cuenta? <a href="../index.html">Iniciar sesión</a></p>
+        </div>
     </div>
 
-    <script>
-        // Función para registrar un nuevo usuario
-        document.getElementById('registerButton').addEventListener('click', async function(event) {
-            event.preventDefault();
-
-            const userName = document.getElementById('userName').value;
-            const userEmail = document.getElementById('userEmail').value;
-            const userPassword = document.getElementById('userPassword').value;
-            const userPhone = document.getElementById('userPhone').value;
-            const userCity = document.getElementById('userCity').value;
-            const userState = document.getElementById('userState').value;
-            const userCountry = document.getElementById('userCountry').value;
-
-            const newUser = {
-                nombre: userName,
-                email: userEmail,
-                password: userPassword,
-                telefono: userPhone,
-                ciudad: userCity,
-                estado: userState,
-                pais: userCountry
-            };
-
-            // Llamada a la API para agregar el nuevo usuario
-            const response = await fetch('/api/users', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify(newUser),
-            });
-
-            const messageElement = document.getElementById('message');
-
-            if (response.ok) {
-                messageElement.textContent = 'Usuario registrado correctamente.';
-                messageElement.style.color = '#2ecc71';
-                document.getElementById('registerForm').reset();
-            } else {
-                const errorData = await response.json();
-                messageElement.textContent = `Error al registrar usuario: ${errorData.error}`;
-                messageElement.style.color = '#e74c3c';
-            }
-        });
-    </script>
+    <script src="../JS/registro.js"></script>
 </body>
 </html>

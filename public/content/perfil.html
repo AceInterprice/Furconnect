@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Perfil de Usuario</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <link rel="stylesheet" href="../css/perfil.css">
+</head>
+<body>
+    <div class="profile-container">
+        <!-- Botón de regresar -->
+        <button class="back-button" onclick="window.location.href='./consultas.html'">
+            <i class="fas fa-arrow-left"></i> Regresar
+        </button>
+
+        <div class="profile-header">
+            <h2>Perfil</h2>
+            <div class="profile-pic-container">
+                <img id="profileImage" src="default-avatar.png" alt="Foto de perfil" class="profile-pic">
+                <input type="file" id="imageUpload" accept="image/*" hidden>
+                <label for="imageUpload" class="edit-icon"><i class="fas fa-camera"></i></label>
+            </div>
+        </div>
+
+        <form id="profileForm">
+            <label>Nombre</label>
+            <input type="text" id="userName">
+            
+            <label>Email</label>
+            <input type="email" id="userEmail">
+                         
+            <label>Número de celular</label>
+            <input type="text" id="userPhone">
+            
+            <div class="location-fields">
+                <div>
+                    <label>País</label>
+                    <input type="text" id="userCountry">
+                </div>
+                <div>
+                    <label>Estado</label>
+                    <input type="text" id="userState">
+                </div>
+                <div>
+                    <label>Localidad</label>
+                    <input type="text" id="userCity">
+                </div>
+            </div>
+
+            <button type="button" id="editProfile" class="edit-btn">Editar perfil</button>
+            <button type="button" id="deleteProfile" class="delete-btn">Eliminar cuenta</button>
+        </form>
+    </div>
+
+    <script src="../JS/perfil.js"></script>
+</body>
+</html>

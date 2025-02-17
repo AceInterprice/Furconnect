@@ -1,137 +1,39 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="es">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Login and Fetch Pets</title>
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            background-color: #f2f2f2;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            height: 100vh;
-            margin: 0;
-        }
-
-        #log {
-            background-color: white;
-            border-radius: 8px;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-            padding: 30px;
-            width: 300px;
-            text-align: center;
-        }
-
-        h1 {
-            color: #333;
-            margin-bottom: 20px;
-        }
-
-        #loginForm {
-            width: 100%;
-        }
-
-        input[type="email"],
-        input[type="password"] {
-            width: 100%;
-            padding: 10px;
-            margin: 10px 0;
-            border: 1px solid #ccc;
-            border-radius: 4px;
-            box-sizing: border-box;
-        }
-
-        input[type="email"]:focus,
-        input[type="password"]:focus {
-            border-color: #66afe9;
-            outline: none;
-        }
-
-        button {
-            background-color: #4CAF50;
-            color: white;
-            padding: 10px;
-            border: none;
-            border-radius: 4px;
-            cursor: pointer;
-            width: 100%;
-            font-size: 16px;
-        }
-
-        button:hover {
-            background-color: #45a049;
-        }
-
-        #message {
-            margin-top: 20px;
-            color: red;
-            text-align: center;
-        }
-
-        #tokenContainer {
-            margin-top: 20px;
-            color: blue;
-            text-align: center;
-        }
-    </style>
+    <title>FurConnect - Iniciar Sesión</title>
+    <link rel="stylesheet" href="./css/login.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
 </head>
 <body>
-    <div id="log">
-        <h1>Login</h1>
-        <form id="loginForm">
-            <input type="email" id="email" placeholder="Email" required>
-            <input type="password" id="password" placeholder="Password" required>
-            <button type="submit">Login</button>
-        </form>
-        <a class="link" href="./content/registro.html">Registrarse</a>
+    <div class="container">
+        <div class="image-section">
+        </div>
+        <div class="form-section">
+            <h2>Iniciar sesión</h2>
+            <form id="loginForm">
+                <div class="input-group">
+                    <i class="fas fa-envelope"></i>
+                    <input type="email" id="email" placeholder="Correo electrónico" required>
+                </div>
+                <div class="input-group">
+                    <i class="fas fa-lock"></i>
+                    <input type="password" id="password" placeholder="Contraseña" required>
+                </div>
+                <button type="submit" class="btn-login">Iniciar sesión</button>
+            </form>
+            <div class="social-login">
+                <p>O registrarse con</p>
+                <div class="social-icons">
+                    <button><i class="fab fa-google"></i></button>
+                    <button><i class="fab fa-facebook-f"></i></button>
+                </div>
+            </div>
+            <p class="register-link">¿Todavía no tienes una cuenta? <a href="./content/registro.html">Regístrate</a></p>
+        </div>
     </div>
-    <div id="message"></div>
-    
-    <div id="tokenContainer"></div>
-    
-    <script>
-        document.getElementById('loginForm').addEventListener('submit', async function(event) {
-            event.preventDefault(); // Evita el comportamiento por defecto del formulario
-
-            const email = document.getElementById('email').value;
-            const password = document.getElementById('password').value;
-
-            try {
-                // Llamada a la API para iniciar sesión
-                const response = await fetch('/api/login', {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json'
-                    },
-                    body: JSON.stringify({ email, password })
-                });
-
-                const data = await response.json();
-
-                if (response.ok && data.token) {
-                    localStorage.setItem('token', data.token);
-                    localStorage.setItem('userID', data.user.id); 
-                    localStorage.setItem('role', data.user.role);
-
-                    // Mostrar el token y mensaje de éxito
-                    document.getElementById('tokenContainer').textContent = `Token almacenado: ${data.token}`;
-                    document.getElementById('message').textContent = 'Login exitoso!';
-
-                    if (data.user.role === 'admin') {
-                        window.location.href = "./content/admin.html";
-                    } else {
-                        window.location.href = "./content/consultas.html";
-                    }
-                } else {
-                    alert("Error: " + (data.message || "Credenciales incorrectas."));
-                }
-            } catch (error) {
-                console.error('Error:', error);
-                alert("Error en la conexión con el servidor.");
-            }
-        });
-    </script>
+    <script src="./JS/login.js"></script>
 </body>
 </html>

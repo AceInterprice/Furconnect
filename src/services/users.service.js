@@ -65,10 +65,11 @@ export const loginUsers = async (email, password) => {
 };
 
 // Actualizar un usuario por ID
-export const updateUserById = async (id, nombre, apellido, email, password, telefono, ciudad, estado, pais) => {
+export const updateUserById = async (id, imagen, nombre, apellido, email, password, telefono, ciudad, estado, pais) => {
     const user = await User.findById(id); // Busca el usuario por ID
     if (!user) return null;
 
+    user.imagen = imagen; 
     user.nombre = nombre;
     user.apellido = apellido;
     user.email = email;

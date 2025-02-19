@@ -12,6 +12,7 @@ body {
     padding: 20px 40px;
     border-radius: 10px;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    border: 2px solid;
 }
 
 .profile-header {
@@ -33,14 +34,14 @@ body {
     height: 100px;
     border-radius: 50%;
     object-fit: cover;
+    border: 2px solid;
 }
 
 .edit-icon {
     position: absolute;
     bottom: 0;
     right: 0;
-    background: #C9863C;
-    color: white;
+    background: #fcfbfa;
     padding: 5px;
     border-radius: 50%;
     cursor: pointer;
@@ -48,16 +49,12 @@ body {
 }
 
 .edit-icon:hover {
-    background: #A5662E;
+    background: #8685856b;
 }
 
 .back-button {
-    background-color: #C9863C;
-    color: white;
-    border: none;
-    padding: 10px 20px;
+    color: black;
     cursor: pointer;
-    border-radius: 5px;
     font-size: 16px;
     display: flex;
     align-items: center;
@@ -65,14 +62,11 @@ body {
     margin-bottom: 20px;
 }
 
-.back-button:hover {
-    background-color: #A5662E;
-}
 
 #profileForm label {
     display: block;
     font-weight: bold;
-    margin-bottom: 5px;
+    margin: 7px;
 }
 
 #profileForm input {
@@ -82,6 +76,7 @@ body {
     border-radius: 5px;
     background-color: white;
     color: #333;
+    margin-bottom:2px;
 }
 
 .location-fields {
@@ -118,4 +113,19 @@ body {
 
 .delete-btn:hover {
     background-color: #c9302c;
+}
+
+.out-btn {
+    margin-left: auto; /* Empuja el botón a la derecha */
+    background-color: #6c757d; /* Color de fondo */
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    cursor: pointer;
+    border-radius: 5px;
+    font-size: 16px;
+}
+
+.out-btn:hover {
+    background-color: #545b62;
 }

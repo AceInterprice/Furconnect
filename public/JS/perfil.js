@@ -8,7 +8,7 @@ function getUserIdFromStorage() {
 
 document.addEventListener("DOMContentLoaded", async () => {
     if (!getUserIdFromStorage() || !getToken()) {
-        alert("No se pudo obtener la información del usuario.");
+        window.location.href = "../index.html"; // Redirigir automáticamente si no hay sesión
         return;
     }
     await loadUserProfile();
@@ -139,4 +139,14 @@ document.getElementById("deleteProfile").addEventListener("click", async functio
     }
 });
 
+function logout() {
+    localStorage.removeItem("token");
+    localStorage.removeItem("userID");
+
+    setTimeout(() => {
+        window.location.href = "../index.html";
+    }, 100); // Agrega un pequeño retraso
+}
+
+document.getElementById("logoutButton").addEventListener("click", logout);
 

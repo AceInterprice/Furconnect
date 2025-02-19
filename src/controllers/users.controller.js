@@ -94,8 +94,8 @@ export const updateUser = async (req, res) => {
             return res.status(403).json({ error: "No tienes permiso para actualizar este perfil" });
         }
 
-        const { nombre, apellido, email, password, telefono, ciudad, estado, pais } = req.body;
-        const updatedUser = await updateUserById(id, nombre, apellido, email, password, telefono, ciudad, estado, pais);
+        const { imagen, nombre, apellido, email, password, telefono, ciudad, estado, pais } = req.body;
+        const updatedUser = await updateUserById(id, imagen, nombre, apellido, email, password, telefono, ciudad, estado, pais);
 
         if (!updatedUser) return res.status(404).json({ message: 'Usuario no encontrado' });
 

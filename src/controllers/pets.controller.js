@@ -82,7 +82,7 @@ export const addPet = async (req, res) => {
         console.log("Archivos recibidos:", req.files);
 
         // Obtener la URL de la imagen de Cloudinary
-        const imagen = req.files?.imagen ? req.files.imagen.path : null;
+        const imagen = req.files?.imagen ? req.files.imagen[0].path : null;
 
         // Obtener URLs de medios adicionales (imágenes/videos)
         const media = req.files?.media ? req.files.media.map(file => file.path) : [];

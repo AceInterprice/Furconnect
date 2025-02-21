@@ -9,8 +9,6 @@ import {
     searchPetsByText 
 } from "../services/pets.service.js";
 
-
-
 // Buscar mascotas por texto
 export const searchPets = async (req, res) => {
     try {
@@ -78,19 +76,25 @@ export const getPetsByOwner = async (req, res) => {
 // Agregar una nueva mascota
 export const addPet = async (req, res) => {
     try {
-        const { usuario_id, nombre, raza, tipo, color, tamaño, edad, sexo, vacunas, temperamento, historial_cruzas, media, pedigree } = req.body;
-        
-        // Obtener la URL de la imagen subida
-        const imagen = req.file ? `/uploads/${req.file.filename}` : null; 
+        const { usuario_id, nombre, raza, tipo, color, tamaño, edad, sexo, vacunas, temperamento, historial_cruzas, pedigree } = req.body;
 
+        // Verifica que Multer haya recibido la imagen correctamente
+        console.log("Archivos recibidos:", req.files);
+
+        // Obtener la URL de la imagen de Cloudinary
+        const imagen = req.files?.imagen ? req.files.imagen[0].path : null;
+
+        // Obtener URLs de medios adicionales (imágenes/videos)
+        const media = req.files?.media ? req.files.media.map(file => file.path) : [];
+
+        // Crea la mascota en la base de datos
         const pet = await addNewPet(usuario_id, imagen, nombre, raza, tipo, color, tamaño, edad, sexo, vacunas, temperamento, historial_cruzas, media, pedigree);
+        
         res.status(201).json({ message: "Mascota registrada exitosamente", pet });
     } catch (error) {
         res.status(400).json({ error: error.message });
     }
 };
-
-
 
 // Eliminar una mascota
 export const removePet = async (req, res) => {
@@ -105,22 +109,33 @@ export const removePet = async (req, res) => {
 // Actualizar una mascota
 export const updatePet = async (req, res) => {
     try {
-        const { nombre, raza, tipo, color, tamaño, edad, sexo, vacunas, temperamento, historial_cruzas, media, pedigree } = req.body;
+        const { nombre, raza, tipo, color, tamaño, edad, sexo, vacunas, temperamento, historial_cruzas, pedigree } = req.body;
         
-        // Si se subió una nueva imagen, actualiza el campo 'imagen'
-        const updates = { nombre, raza, tipo, color, tamaño, edad, sexo, vacunas, temperamento, historial_cruzas, media, pedigree };
-        if (req.file) {
-            updates.imagen = `/uploads/${req.file.filename}`;
+        const updates = { nombre, raza, tipo, color, tamaño, edad, sexo, vacunas, temperamento, historial_cruzas, pedigree };
+
+        // Log para verificar los archivos recibidos
+        console.log("Archivos recibidos:", req.files);
+
+        // Verifica si hay una imagen nueva y obtén su URL
+        if (req.files?.imagen) {
+            updates.imagen = req.files.imagen[0].path;
         }
 
+        // Verifica si hay archivos multimedia nuevos
+        if (req.files?.media) {
+            updates.media = req.files.media.map(file => file.path);
+        }
+
+        // Actualiza la mascota en la base de datos
         const updatedPet = await updatePetInService(req.params.id, updates);
 
         if (!updatedPet) {
-            return res.status(404).json({ message: 'Mascota no encontrada' });
+            return res.status(404).json({ message: "Mascota no encontrada" });
         }
-        
-        res.status(200).json({ message: 'Mascota actualizada exitosamente', pet: updatedPet });
+
+        res.status(200).json({ message: "Mascota actualizada exitosamente", pet: updatedPet });
     } catch (error) {
         res.status(400).json({ error: error.message });
     }
 };
+

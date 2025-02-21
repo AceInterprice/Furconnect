@@ -31,7 +31,7 @@ async function loadUserProfile() {
         if (!response.ok) throw new Error("Error al cargar el perfil");
 
         const user = await response.json();
-
+        
         document.getElementById("userName").value = user.nombre;
         document.getElementById("userEmail").value = user.email;
         document.getElementById("userPhone").value = user.telefono || "";

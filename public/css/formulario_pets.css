@@ -1,97 +1,95 @@
-.add-pet-container {
+/* Contenedor principal del formulario */
+#addPetForm {
+    width: 100%;
+    max-width: 700px; /* Aumentamos un poco el ancho */
     display: flex;
-    width: 900px;
-    background: white;
-    border-radius: 10px;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-    overflow: hidden;
-}
-
-/* Sección de imagen */
-.image-section {
-    flex: 1;
-    background: url('../image/fur-inverso.jpg') no-repeat center center/cover;
-    display: flex;
-    justify-content: center;
+    flex-direction: column;
     align-items: center;
-    flex-direction: column;
-    padding: 20px;
-}
-
-/* Sección del formulario */
-.form-section {
-    flex: 1;
-    padding: 40px;
-    display: flex;
-    flex-direction: column;
     justify-content: center;
+    padding: 30px 60px; /* Más padding para mejor separación */
+    margin: 40px auto; /* Centramos el formulario verticalmente */
 }
 
+/* Título del formulario */
 h2 {
-    font-size: 22px;
-    margin-bottom: 20px;
     text-align: center;
+    margin-bottom: 25px; /* Más espacio debajo del título */
+    font-size: 26px;
+    color: #333;
 }
 
-/* Grid para organizar los campos en dos columnas */
+/* Grid para los inputs */
 .grid-container {
     display: grid;
     grid-template-columns: repeat(2, 1fr);
-    gap: 15px;
+    gap: 30px; /* Más espacio entre los inputs */
+    width: 100%;
 }
 
-/* Estilos de los campos de entrada */
+/* Ajuste de inputs */
 .input-group {
     display: flex;
-    align-items: center;
-    background: #fff;
+    flex-direction: column;
+}
+
+/* Estilos para los inputs */
+input, select {
+    width: 90%;
+    padding: 14px; /* Inputs más largos */
     border: 1px solid #ccc;
-    padding: 10px;
-    border-radius: 5px;
-}
-
-.input-group input,
-.input-group select {
-    border: none;
-    outline: none;
-    flex: 1;
-    padding-left: 10px;
+    border-radius: 8px;
     font-size: 16px;
 }
 
-/* Botón de agregar */
-.btn-add {
-    background: #C4662F;
-    color: white;
-    padding: 12px;
-    border: none;
-    border-radius: 5px;
-    cursor: pointer;
+/* Ajuste de input de pedigree */
+.pedigree-group {
+    grid-column: span 2;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+/* Checkbox */
+input[type="checkbox"] {
+    width: 18px;
+    height: 18px;
+}
+
+/* Input de vacunas ocupa todo el ancho */
+.vacunas-group {
+    grid-column: span 2;
+}
+
+/* Botón de subir imagen */
+.upload-group {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: flex-start;
+    gap: 10px;
     width: 100%;
-    font-size: 16px;
-    margin-top: 20px;
-}
-
-.btn-add:hover {
-    background: #a35a29;
 }
 
 /* Vista previa de imagen */
-.image-preview {
+#imagePreview {
     width: 100px;
     height: 100px;
-    border-radius: 10px;
     object-fit: cover;
-    margin-top: 10px;
-    display: none;
+    border-radius: 10px;
+    margin-top: 5px;
 }
 
-/* Botón de regresar */
-.back-button {
-    color: #C4662F;
+/* Botón de agregar */
+.btn-submit {
+    background: #5c3d2e;
+    color: white;
+    border: none;
+    padding: 12px; 
+    border-radius: 8px;
     font-size: 16px;
-    text-decoration: none;
-    margin-bottom: 10px;
-    display: flex;
-    align-items: center;
+    cursor: pointer;
+    width: 35%; /* Ahora ocupa solo el 35% */
+    margin: 20px auto 0 auto; /* Centramos horizontalmente */
+    display: block;
+    text-align: center;
 }

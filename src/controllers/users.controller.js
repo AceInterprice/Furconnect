@@ -53,14 +53,15 @@ export const getUser = async (req, res) => {
 // Agregar un nuevo usuario
 export const addUser = async (req, res) => {
     try {
-        const { nombre, apellido, email, password, telefono, ciudad, estado, pais, role } = req.body; 
+        const {nombre, apellido, email, password, telefono, ciudad, estado, pais, role } = req.body; 
 
         // Validación: Asegurar que los campos obligatorios están completos
         if (!nombre || !apellido || !email || !password || !telefono || !ciudad || !estado || !pais) {
             return res.status(400).json({ error: "Todos los campos obligatorios deben completarse." });
         }
+        const imagen = req.files?.imagen ? req.files.imagen[0].path : null;
 
-        const newUser = await createUser(nombre, apellido, email, password, telefono, ciudad, estado, pais, role);
+        const newUser = await createUser(imagen, nombre, apellido, email, password, telefono, ciudad, estado, pais, role);
         res.status(201).json({ message: 'Usuario creado', user: newUser });
     } catch (error) {
         res.status(400).json({ error: error.message });
@@ -96,6 +97,11 @@ export const updateUser = async (req, res) => {
 
         const { imagen, nombre, apellido, email, password, telefono, ciudad, estado, pais } = req.body;
         const updatedUser = await updateUserById(id, imagen, nombre, apellido, email, password, telefono, ciudad, estado, pais);
+
+          // Verifica si hay una imagen nueva y obtén su URL
+          if (req.files?.imagen) {
+            updates.imagen = req.files.imagen[0].path;
+        }
 
         if (!updatedUser) return res.status(404).json({ message: 'Usuario no encontrado' });
 

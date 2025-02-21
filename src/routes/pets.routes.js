@@ -1,7 +1,7 @@
 import { Router } from 'express';
 import { listPets, getOnePet, getPetsByOwner, addPet, removePet, updatePet, searchPets } from '../controllers/pets.controller.js';
 import { verifyToken } from '../middlewares/auth.middleware.js';
-import upload from "../middlewares/upload.middleware.js";
+import { uploadMascota } from "../config/multer.config.js";
 const router = Router();
 
 /**
@@ -132,7 +132,7 @@ router.get('/api/pets/owner/:ownerId', verifyToken, getPetsByOwner);
 
 /**
  * @swagger
- * /api/newpet:
+ * /api/pets:
  *   post:
  *     summary: Crea una nueva mascota
  *     tags: [Pets]
@@ -148,7 +148,12 @@ router.get('/api/pets/owner/:ownerId', verifyToken, getPetsByOwner);
  *       400:
  *         description: Error en los datos enviados.
  */
-router.post('/api/newpet', upload.single("imagen") ,verifyToken, addPet);
+router.post('/api/pets', verifyToken, uploadMascota.fields([
+        { name: "imagen", maxCount: 1 }, 
+        { name: "media", maxCount: 5 }
+    ]), 
+    addPet
+);
 
 /**
  * @swagger
@@ -177,7 +182,12 @@ router.post('/api/newpet', upload.single("imagen") ,verifyToken, addPet);
  *       400:
  *         description: Error en los datos enviados.
  */
-router.put('/api/updatepet/:id', upload.single("imagen"),verifyToken, updatePet);
+router.put('/api/pets/:id', verifyToken, uploadMascota.fields([
+        { name: "imagen", maxCount: 1 }, 
+        { name: "media", maxCount: 5 }
+    ]), 
+    updatePet
+);
 
 /**
  * @swagger

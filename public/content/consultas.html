@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="../css/consultas.css">
     <link rel="stylesheet" href="../css/formulario_pets.css">
+    <link rel="stylesheet" href="../css/misMascotas.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
     <title>Mascotas del Dueño</title>
 </head>
@@ -14,13 +15,12 @@
             <img src="../image/logo_furconnect.png" alt="FurConnect">
         </div>
         <div class="nav-links">
-            <a href="../index.html">Regesar temporal</a>
             <a href="#" onclick="fetchPets()">Mis Mascotas</a>
             <a href="#" onclick="showAddPetForm()">Agregar Mascota</a>
             <a href="#" onclick="fetchSolicitudes()">Solicitudes</a>
         </div>
         <div class="user-avatar">
-            <a href="./perfil.html"><img src="usuario-avatar.jpg" alt="Usuario"></a>
+            <a href="./perfil.html"><img src="../image/empleado.png" alt="Usuario"></a>
         </div>
     </div>
     
@@ -57,78 +57,91 @@
         <div id="allPetsTable"></div>
     </div>
     
-    <div class="container" id="addPetForm" style="display: none;">
-        <!-- Sección de imagen -->
-        <div class="image-section">
+<div class="content-container" id="addPetForm" style="display: none;">
+        <div class="form-section">  
+            <h2 id="formTitle">Agregar Mascota</h2>
+            <div class="form-container">
+                <form id="petForm" enctype="multipart/form-data">
+                    <input type="hidden" id="petId">
+                    <div class="grid-container">
+                        <div class="input-group">
+                            <input type="text" id="petName" name="nombre" placeholder="Nombre mascota" required>
+                        </div>
+                        <div class="input-group upload-group">
+                            <label for="petImagen" class="upload-label">
+                                <i class="fas fa-camera"></i> Subir una foto
+                            </label>
+                            <input type="file" id="petImagen" name="imagen" accept="image/*" hidden>
+                            <img id="imagePreview" src="" alt="Vista previa" style="display:none;">
+                        </div>
+                        <div class="input-group">
+                            <input type="text" id="petRaza" name="raza" placeholder="Raza" required>
+                        </div>               
+                        <div class="input-group">
+                            <select id="petTipo" name="tipo" required>
+                                <option value="">Tipo</option>
+                                <option value="Perro">Perro</option>
+                                <option value="Gato">Gato</option>
+                                <option value="Otro">Otro</option>
+                            </select>
+                        </div>
+                        <div class="input-group">
+                            <input type="text" id="petColor" name="color" placeholder="Color">
+                        </div>
+                        <div class="input-group">
+                            <select id="petTamaño" name="tamaño" required>
+                                <option value="">Tamaño</option>
+                                <option value="pequeño">Pequeño</option>
+                                <option value="mediano">Mediano</option>
+                                <option value="grande">Grande</option>
+                            </select>
+                        </div>
+                        <div class="input-group">
+                            <input type="number" id="petEdad" name="edad" placeholder="Edad" required>
+                        </div>
+                        <div class="input-group">
+                            <select id="petSexo" name="sexo" required>
+                                <option value="">Sexo</option>
+                                <option value="macho">Macho</option>
+                                <option value="hembra">Hembra</option>
+                            </select>
+                        </div>
+                        <div class="input-group full-width">
+                            <select id="petTemperamento" name="temperamento" required>
+                                <option value="">Temperamento</option>
+                                <option value="Amigable">Amigable</option>
+                                <option value="Activo">Activo</option>
+                                <option value="Tímido">Tímido</option>
+                                <option value="Curioso">Curioso</option>
+                                <option value="Tranquilo">Tranquilo</option>
+                                <option value="Obediente">Obediente</option>
+                                <option value="Ansioso">Ansioso</option>
+                                <option value="Juguetón">Juguetón</option>
+                                <option value="Terco">Terco</option>
+                                <option value="Dominante">Dominante</option>
+                            </select>
+                        </div>
+                        <div class="input-group">
+                            <label for="petPedigree">
+                                <input type="checkbox" id="petPedigree" name="pedigree"> ¿Tiene Pedigree?
+                            </label>
+                        </div>
+                        <div class="input-group full-width">
+                            <input type="text" id="petVacunas" name="vacunas" placeholder="Vacunas (separadas por comas)">
+                        </div>
+                        <div class="input-group upload-group full-width">
+                            <label for="petMedia" class="upload-label">
+                                <i class="fas fa-images"></i> Subir imágenes o videos
+                            </label>
+                            <input type="file" id="petMedia" name="media" accept="image/*,video/*" multiple hidden>
+                            <div id="mediaPreviewContainer"></div>
+                        </div>
+                    </div>
+                    <button type="submit" class="btn-submit">Agregar</button>
+                </form>
+            </div>
         </div>
-
-        <!-- Sección del formulario -->
-        <div class="form-section">
-            <a href="#" class="back-button" onclick="hideAddPetForm()">&#x2190; Regresar</a>
-            <h2>Agregar Mascota</h2>
-            <form>
-                <div class="grid-container">
-                    <div class="input-group">
-                        <input type="text" id="petName" placeholder="Nombre mascota" required>
-                    </div>
-                    <div class="input-group upload-group">
-                        <label for="petImagen" class="upload-label">
-                            <i class="fas fa-camera"></i> Subir foto
-                        </label>
-                        <input type="file" id="petImagen" accept="image/*" hidden>
-                    </div>
-                    <div class="input-group">
-                        <input type="text" id="petRaza" placeholder="Raza" required>
-                    </div>
-                    <div class="input-group">
-                        <select id="petTipo" required>
-                            <option value="">Tipo</option>
-                            <option value="Perro">Perro</option>
-                            <option value="Gato">Gato</option>
-                            <option value="Otro">Otro</option>
-                        </select>
-                    </div>
-                    <div class="input-group">
-                        <input type="text" id="petColor" placeholder="Color">
-                    </div>
-                    <div class="input-group">
-                        <select id="petTamaño" required>
-                            <option value="">Tamaño</option>
-                            <option value="pequeño">Pequeño</option>
-                            <option value="mediano">Mediano</option>
-                            <option value="grande">Grande</option>
-                        </select>
-                    </div>
-                    <div class="input-group">
-                        <input type="number" id="petEdad" placeholder="Edad" required>
-                    </div>
-                    <div class="input-group">
-                        <select id="petSexo" required>
-                            <option value="">Sexo</option>
-                            <option value="macho">Macho</option>
-                            <option value="hembra">Hembra</option>
-                        </select>
-                    </div>
-                    <div class="input-group full-width">
-                        <select id="petTemperamento" required>
-                            <option value="">Temperamento</option>
-                            <option value="Amigable">Amigable</option>
-                            <option value="Activo">Activo</option>
-                            <option value="Tímido">Tímido</option>
-                            <option value="Curioso">Curioso</option>
-                            <option value="Tranquilo">Tranquilo</option>
-                            <option value="Obediente">Obediente</option>
-                            <option value="Ansioso">Ansioso</option>
-                            <option value="Juguetón">Juguetón</option>
-                            <option value="Terco">Terco</option>
-                            <option value="Dominante">Dominante</option>
-                        </select>
-                    </div>
-                </div>
-                <button type="submit" class="btn-submit">Agregar</button>
-            </form>
-        </div>
-    </div>
+</div>                
      
     <!-- Contenedor de solicitudes -->
     <div id="solicitudesContainer" class="content-container" style="display: none;">

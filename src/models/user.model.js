@@ -1,7 +1,7 @@
 import mongoose from 'mongoose';
 
 const userSchema = new mongoose.Schema({
-  imagen: {type: String},
+  imagen: {type: String, description: "Foto de perfil"},
   nombre: { type: String, required: true },
   apellido: {type: String, require: true},
   email: { 
@@ -18,7 +18,8 @@ const userSchema = new mongoose.Schema({
   telefono: {
     type: String,
     match: /^[0-9]{10}$/, 
-    description: "Número de teléfono de 10 dígitos."
+    description: "Número de teléfono de 10 dígitos.",
+    maxlength: 10
   },
   ciudad: String,
   estado: { type: String, required: true },

@@ -76,16 +76,7 @@ export const getPetsByOwner = async (req, res) => {
 // Agregar una nueva mascota
 export const addPet = async (req, res) => {
     try {
-        const { usuario_id, nombre, raza, tipo, color, tamaño, edad, sexo, vacunas, temperamento, historial_cruzas, pedigree } = req.body;
-
-        // Verifica que Multer haya recibido la imagen correctamente
-        console.log("Archivos recibidos:", req.files);
-
-        // Obtener la URL de la imagen de Cloudinary
-        const imagen = req.files?.imagen ? req.files.imagen[0].path : null;
-
-        // Obtener URLs de medios adicionales (imágenes/videos)
-        const media = req.files?.media ? req.files.media.map(file => file.path) : [];
+        const { usuario_id, imagen, nombre, raza, tipo, color, tamaño, edad, sexo, vacunas, temperamento, historial_cruzas, pedigree } = req.body;
 
         // Crea la mascota en la base de datos
         const pet = await addNewPet(usuario_id, imagen, nombre, raza, tipo, color, tamaño, edad, sexo, vacunas, temperamento, historial_cruzas, media, pedigree);

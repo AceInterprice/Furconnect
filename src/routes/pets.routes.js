@@ -148,12 +148,7 @@ router.get('/api/pets/owner/:ownerId', verifyToken, getPetsByOwner);
  *       400:
  *         description: Error en los datos enviados.
  */
-router.post('/api/pets', verifyToken, uploadMascota.fields([
-        { name: "imagen", maxCount: 1 }, 
-        { name: "media", maxCount: 5 }
-    ]), 
-    addPet
-);
+router.post('/api/pets', verifyToken, addPet);
 
 /**
  * @swagger
@@ -182,12 +177,7 @@ router.post('/api/pets', verifyToken, uploadMascota.fields([
  *       400:
  *         description: Error en los datos enviados.
  */
-router.put('/api/pets/:id', verifyToken, uploadMascota.fields([
-        { name: "imagen", maxCount: 1 }, 
-        { name: "media", maxCount: 5 }
-    ]), 
-    updatePet
-);
+router.put('/api/pets/:id', verifyToken, updatePet);
 
 /**
  * @swagger

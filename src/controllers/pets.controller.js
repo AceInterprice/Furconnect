@@ -76,7 +76,7 @@ export const getPetsByOwner = async (req, res) => {
 // Agregar una nueva mascota
 export const addPet = async (req, res) => {
     try {
-        const { usuario_id, imagen, nombre, raza, tipo, color, tamaño, edad, sexo, vacunas, temperamento, historial_cruzas, pedigree } = req.body;
+        const { usuario_id, imagen, nombre, raza, tipo, color, tamaño, edad, sexo, vacunas, temperamento, historial_cruzas, media, pedigree } = req.body;
 
         // Crea la mascota en la base de datos
         const pet = await addNewPet(usuario_id, imagen, nombre, raza, tipo, color, tamaño, edad, sexo, vacunas, temperamento, historial_cruzas, media, pedigree);

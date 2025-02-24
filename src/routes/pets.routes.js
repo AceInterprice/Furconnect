@@ -1,7 +1,6 @@
 import { Router } from 'express';
 import { listPets, getOnePet, getPetsByOwner, addPet, removePet, updatePet, searchPets } from '../controllers/pets.controller.js';
 import { verifyToken } from '../middlewares/auth.middleware.js';
-import { uploadMascota } from "../config/multer.config.js";
 const router = Router();
 
 /**

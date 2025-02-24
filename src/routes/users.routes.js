@@ -1,7 +1,6 @@
 import { Router } from 'express';
 import { listUsers, getUser, addUser, updateUser, deleteUser, loginUser } from '../controllers/users.controller.js';
 import { verifyRole, verifyToken } from '../middlewares/auth.middleware.js';
-import { uploadUsuario } from '../config/multer.config.js';
 const router = Router();
 
 /**
@@ -96,7 +95,7 @@ router.get('/api/users/:id', verifyToken, getUser);
  *       400:
  *         description: Error en los datos enviados.
  */
-router.post('/api/users',uploadUsuario.fields({name: "imagen", maxCount: 1})  ,addUser);
+router.post('/api/users', addUser);
 
 /**
  * @swagger
@@ -125,7 +124,7 @@ router.post('/api/users',uploadUsuario.fields({name: "imagen", maxCount: 1})  ,a
  *       400:
  *         description: Error en los datos enviados.
  */
-router.put('/api/users/:id', verifyToken, updateUser, uploadUsuario.fields({name: "imagen", maxCount: 1}));
+router.put('/api/users/:id', verifyToken, updateUser);
 
 /**
  * @swagger

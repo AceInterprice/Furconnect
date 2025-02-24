@@ -1,3 +1,4 @@
+import { types } from '@babel/core';
 import mongoose from 'mongoose';
 
 const userSchema = new mongoose.Schema({
@@ -32,6 +33,7 @@ const userSchema = new mongoose.Schema({
     }
   ],
   role: { type: String, enum: ['user', 'admin'], default: 'user' }, // Campo opcional para el rol
+  estatus: {type: String, enum: ['gratis', 'premium'], default:'gratis'},
   fecha_creacion: { type: Date, default: Date.now } // Fecha de creación
 });
 

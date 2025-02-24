@@ -5,8 +5,6 @@ import { fileURLToPath } from 'url';
 import petsRoutes from './routes/pets.routes.js';
 import usersRoutes from './routes/users.routes.js';
 import solicitudesRoutes from './routes/solicitudes.routes.js';
-import encountersRoutes from './routes/encounters.routes.js';
-import seguimientoRoutes from './routes/seguimiento.routes.js';
 import chatRoomRoutes from './routes/chatroom.routes.js';  
 import cors from 'cors';
 import cookieParser from 'cookie-parser';
@@ -33,8 +31,6 @@ connectDB();
 const swaggerDocs = swaggerJsDoc(swaggerOptions);
 app.use("/api-docs", swaggerUiExpress.serve, swaggerUiExpress.setup(swaggerDocs));
 
-// ❌ Eliminar la línea que servía archivos desde '/uploads' (ya no se usan archivos locales)
-
 // 📌 Servir archivos estáticos desde 'public'
 app.use(express.static(path.join(__dirname, '../public')));
 
@@ -58,8 +54,6 @@ app.use((req, res, next) => {
 app.use(petsRoutes);
 app.use(usersRoutes);
 app.use(solicitudesRoutes);
-app.use(encountersRoutes);
-app.use(seguimientoRoutes);
 app.use(chatRoomRoutes);
 
 export default app;

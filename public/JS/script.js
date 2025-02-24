@@ -2,22 +2,18 @@ const userID = localStorage.getItem('userID');
 function getToken() { return localStorage.getItem('token'); }
 
 function showContainer(containerId) {
-    // Selecciona todos los contenedores con la clase 'content-container'
     const containers = document.querySelectorAll('.content-container');
 
-    // Oculta todos los contenedores
     containers.forEach(container => {
         container.style.display = 'none';
     });
 
-    // Muestra el contenedor especificado
     const containerToShow = document.getElementById(containerId);
     if (containerToShow) {
-        containerToShow.style.display = 'block';
-    } else {
+        containerToShow.style.removeProperty('display'); 
+    } else {    
         console.warn(`El contenedor con ID "${containerId}" no existe.`);
     }
-
 }
 
 ///////// MIS MASCOTAS //////////
@@ -79,23 +75,28 @@ function displayUserPets(pets) {
 function showPetDetails(id, nombre, raza, tipo, color, tamaño, edad, sexo, pedigree, temperamento, vacunas, media, imagen) {
     const petDetails = document.getElementById('petDetails');
     petDetails.innerHTML = `
-        <div class="pet-details-card">
+        <div class="pet-details-card new-style">
             <button class="close-btn" onclick="closePetDetails()">&times;</button>
-            <img src="${imagen || '../image/perro_img.png'}" alt="${nombre}">
-            <h2>${nombre} ${pedigree ? '<i class="fas fa-medal" title="Pedigree"></i>' : ''}</h2>
-            <p><strong>ID:</strong> ${id}</p>
-            <p><strong>Raza:</strong> ${raza}</p>
-            <p><strong>Tipo:</strong> ${tipo}</p>
-            <p><strong>Color:</strong> ${color}</p>
-            <p><strong>Tamaño:</strong> ${tamaño}</p>
-            <p><strong>Edad:</strong> ${edad} años</p>
-            <p><strong>Sexo:</strong> ${sexo}</p>
-            <p><strong>Temperamento:</strong> ${temperamento}</p>
-            <p><strong>Vacunas:</strong> ${vacunas}</p>
-            <p><strong>Media:</strong> ${media}</p>
-            <div class="button-container">
-                <button class="edit-btn" onclick="editPet('${id}', '${nombre}', '${raza}','${tipo}', '${color}', '${tamaño}', '${edad}', '${sexo}', ${pedigree}, '${temperamento}', '${vacunas}', '${media}', '${imagen || ''}')">Editar</button>
-                <button class="delete-btn" onclick="removePet('${id}')">Eliminar</button>
+            <div class="pet-info-container">
+                <img class="pet-image" src="${imagen || '../image/perro_img.png'}" alt="${nombre}">
+                <div class="pet-info">
+                    <h2 class="pet-name">${nombre} 
+                        ${pedigree ? '<i class="fas fa-medal gold-medal" title="Pedigree"></i>' : ''}
+                    </h2>
+                    <p><strong>Raza:</strong> ${raza}</p>
+                    <p><strong>Tipo:</strong> ${tipo}</p>
+                    <p><strong>Color:</strong> ${color}</p>
+                    <p><strong>Tamaño:</strong> ${tamaño}</p>
+                    <p><strong>Edad:</strong> ${edad} años</p>
+                    <p><strong>Sexo:</strong> ${sexo}</p>
+                    <p><strong>Temperamento:</strong> ${temperamento}</p>
+                    <p><strong>Vacunas:</strong> ${vacunas}</p>
+
+                    <div class="button-container">
+                        <button class="edit-btn" onclick="editPet('${id}', '${nombre}', '${raza}','${tipo}', '${color}', '${tamaño}', '${edad}', '${sexo}', ${pedigree}, '${temperamento}', '${vacunas}', '${media}', '${imagen || ''}')">Editar</button>
+                        <button class="delete-btn" onclick="removePet('${id}')">Eliminar</button>
+                    </div>
+                </div>
             </div>
         </div>
     `;
@@ -118,50 +119,100 @@ function populatePetSelector(pets) {
     });
 }
 
-function showAddPetForm() {
-    showContainer('addPetForm'); // Muestra el formulario de agregar mascota
+async function getSignedURL() {
+    try {
+        const token = getToken(); // Suponiendo que tienes una función para obtener el token
+        const response = await fetch('/api/cloudinary-signature', {
+            method: 'GET',
+            headers: { 
+                'Authorization': `Bearer ${token}`
+            }
+        });
+
+        if (!response.ok) {
+            throw new Error('Error al obtener la firma');
+        }
+
+        const data = await response.json();
+        return data; // { signature, timestamp, apiKey, cloudName }
+    } catch (error) {
+        console.error('Error obteniendo la firma:', error);
+        return null;
+    }
 }
 
-document.getElementById("petImagen").addEventListener("change", function(event) {
-    const file = event.target.files[0];
-    if (file) {
-        const reader = new FileReader();
-        reader.onload = function(e) {
-            const imagePreview = document.getElementById("imagePreview");
-            imagePreview.src = e.target.result;
-            imagePreview.style.display = "block";
-        };
-        reader.readAsDataURL(file);
-    }
-});
+async function uploadImageToCloudinary(file) {
+    try {
+        // 1️⃣ Obtener la firma desde el backend
+        const response = await fetch('/api/cloudinary-signature', {
+            method: 'GET',
+            headers: {
+                'Authorization': `Bearer ${getToken()}`,  // Asegurar que el token se envía
+                'Content-Type': 'application/json'
+            }
+        });        
+        const { signature, timestamp, api_key, cloudName } = await response.json();
 
+        // 2️⃣ Preparar los datos para la subida
+        const formData = new FormData();
+        formData.append('file', file);
+        formData.append('timestamp', timestamp);
+        formData.append('api_key', api_key);
+        formData.append('signature', signature);
+
+        // 3️⃣ Subir la imagen a Cloudinary
+        const uploadResponse = await fetch(`https://api.cloudinary.com/v1_1/${cloudName}/image/upload`, {
+            method: 'POST',
+            body: formData
+        });
+
+        const data = await uploadResponse.json();
+        return data.secure_url; // 🔗 Retorna la URL de la imagen subida
+
+    } catch (error) {
+        console.error("Error al subir la imagen:", error);
+        return null;
+    }
+}
+
+function showAddPetForm() {
+    document.getElementById('addPetForm').style.display = 'flex';
+    document.getElementById('petsContainer').style.display = 'none'; // Oculta otras secciones si es necesario
+}
+
+// 📌 Evento para manejar el formulario de agregar mascota
 document.getElementById('addPetForm').addEventListener('submit', async function(event) {
     event.preventDefault();
     
     const petId = document.getElementById('petId').value;
     const fileInput = document.getElementById('petImagen');
     const file = fileInput.files[0]; // Obtener la imagen seleccionada
+    let imageUrl = "";
 
-    // Crear FormData para enviar imágenes
-    const formData = new FormData();
-    formData.append('usuario_id', userID);
-    formData.append('nombre', document.getElementById('petName').value);
-    formData.append('raza', document.getElementById('petRaza').value);
-    formData.append('tipo', document.getElementById('petTipo').value);
-    formData.append('color', document.getElementById('petColor').value);
-    formData.append('tamaño', document.getElementById('petTamaño').value);
-    formData.append('edad', parseInt(document.getElementById('petEdad').value));
-    formData.append('sexo', document.getElementById('petSexo').value);
-    formData.append('pedigree', document.getElementById('petPedigree').checked);
-    formData.append('temperamento', document.getElementById('petTemperamento').value);
-    
-    // Convertir arrays a string (ya que FormData no maneja arrays bien)
-    formData.append('vacunas', document.getElementById('petVacunas').value);
-    formData.append('media', document.getElementById('petMedia').value);
-    
     if (file) {
-        formData.append('imagen', file); // Agregar la imagen solo si hay una seleccionada
+        imageUrl = await uploadImageToCloudinary(file);
+        if (!imageUrl) {
+            alert("Error al subir la imagen.");
+            return;
+        }
     }
+
+    // 📌 Crear objeto JSON con los datos de la mascota
+    const petData = {
+        usuario_id: userID,
+        nombre: document.getElementById('petName').value,
+        raza: document.getElementById('petRaza').value,
+        tipo: document.getElementById('petTipo').value,
+        color: document.getElementById('petColor').value,
+        tamaño: document.getElementById('petTamaño').value,
+        edad: parseInt(document.getElementById('petEdad').value),
+        sexo: document.getElementById('petSexo').value,
+        pedigree: document.getElementById('petPedigree').checked,
+        temperamento: document.getElementById('petTemperamento').value,
+        vacunas: document.getElementById('petVacunas').value.split(','), // Convertir a array
+        media: document.getElementById('petMedia').value.split(','), // Convertir a array
+        imagen: imageUrl // Guardar la URL en lugar del archivo
+    };
 
     const token = getToken();
     const url = petId ? `/api/pets/${petId}` : '/api/pets';
@@ -171,12 +222,12 @@ document.getElementById('addPetForm').addEventListener('submit', async function(
         const response = await fetch(url, {
             method,
             headers: {
+                'Content-Type': 'application/json',
                 'Authorization': `Bearer ${token}`
             },
-            body: formData // Enviar FormData en el cuerpo
+            body: JSON.stringify(petData) // Enviar JSON en el cuerpo
         });
 
-        // Intentar convertir la respuesta en JSON
         let responseData;
         try {
             responseData = await response.json();
@@ -192,17 +243,11 @@ document.getElementById('addPetForm').addEventListener('submit', async function(
         alert('Mascota guardada correctamente.');
 
         // 🧹 Limpiar el formulario
-        document.getElementById('petForm').reset();
-
-        // 🖼️ Ocultar previsualización de imagen
-        const imagePreview = document.getElementById('imagePreview');
-        imagePreview.src = '';
-        imagePreview.style.display = 'none';
-
-        // 📂 Cerrar el formulario de agregar
+        document.getElementById('addPetForm').reset();
+        document.getElementById('imagePreview').src = '';
+        document.getElementById('imagePreview').style.display = 'none';
         document.getElementById('addPetForm').style.display = 'none';
 
-        // 🔄 Recargar lista de mascotas
         await fetchPets();
 
     } catch (error) {
@@ -211,7 +256,7 @@ document.getElementById('addPetForm').addEventListener('submit', async function(
     }
 });
 
-// Previsualización de imagen antes de enviarla
+// 📌 Previsualización de imagen antes de enviarla
 document.getElementById("petImagen").addEventListener("change", function(event) {
     const file = event.target.files[0];
     if (file) {
@@ -225,54 +270,54 @@ document.getElementById("petImagen").addEventListener("change", function(event) 
     }
 });
 
-function editPet(id, nombre, raza, tipo, color, tamaño, edad, sexo, pedigree, temperamento, vacunas, media, imagen) {
-    document.getElementById('formTitle').textContent = 'Editar Mascota';
-    document.getElementById('petId').value = id;
-    document.getElementById('petName').value = nombre;
-    document.getElementById('petRaza').value = raza;
-    document.getElementById('petTipo').value = tipo;
-    document.getElementById('petColor').value = color;
-    document.getElementById('petTamaño').value = tamaño;
-    document.getElementById('petEdad').value = edad;
-    document.getElementById('petSexo').value = sexo;
-    document.getElementById('petPedigree').checked = pedigree;
-    document.getElementById('petTemperamento').value = temperamento;
-    document.getElementById('petVacunas').value = vacunas;
-    document.getElementById('petMedia').value = media;
+async function editPet(id, nombre, raza, tipo, color, tamaño, edad, sexo, pedigree, temperamento, vacunas, media, imagen) {
+    document.getElementById('editPetId').value = id;
 
-    // Previsualización de la imagen actual si existe
-    const imagePreview = document.getElementById("imagePreview");
-    if (imagen) {
-        imagePreview.src = imagen;
-        imagePreview.style.display = "block";
-    } else {
-        imagePreview.style.display = "none";
-    }
+    document.getElementById('editPetName').value = nombre;
+    document.getElementById('editPetRaza').value = raza;
+    document.getElementById('editPetTipo').value = tipo;
+    document.getElementById('editPetColor').value = color;
+    document.getElementById('editPetSexo').value = sexo;
+    document.getElementById('editPetPedigree').checked = pedigree;
+    document.getElementById('editPetTamaño').value = tamaño;
+    document.getElementById('editPetEdad').value = edad;
+    document.getElementById('editPetTemperamento').value = temperamento;
+    document.getElementById('editPetVacunas').value = vacunas;
+    document.getElementById('editPetMedia').value = media; 
 
-    // Guardamos la imagen original en caso de que no se seleccione una nueva
-    document.getElementById('petImagen').dataset.originalImage = imagen || '';
+    // 📌 Previsualizar la imagen actual
+    const imagePreview = document.getElementById("editImagePreview");
+    imagePreview.src = imagen || '../image/perro_img.png';
+    imagePreview.style.display = "block";
 
-    document.getElementById('addPetForm').style.display = 'block';
+    // 📌 Guardar imagen original en dataset
+    const imageInput = document.getElementById('editPetImagen');
+    imageInput.dataset.originalImage = imagen || '';
+
+    // 📌 Manejar la previsualización cuando el usuario cambie la imagen
+    imageInput.addEventListener("change", async function(event) {
+        const file = event.target.files[0];
+
+        if (file) {
+            const newImageUrl = await uploadImageToCloudinary(file); // Subir imagen nueva
+            if (newImageUrl) {
+                imagePreview.src = newImageUrl; // Actualizar vista previa
+                imageInput.dataset.originalImage = newImageUrl; // Guardar nueva URL en dataset
+            }
+        } else {
+            imagePreview.src = imageInput.dataset.originalImage || 'default-image.png';
+        }
+    });
+
+    document.getElementById("editFormSubmitButton").textContent = "Guardar cambios";
+    document.getElementById('editPetFormContainer').style.display = 'block';
+    document.getElementById("closeEditForm").style.display = "block";
 }
 
-// Manejar la previsualización de la nueva imagen seleccionada
-document.getElementById("petImagen").addEventListener("change", function(event) {
-    const file = event.target.files[0];
-    const imagePreview = document.getElementById("imagePreview");
-
-    if (file) {
-        const reader = new FileReader();
-        reader.onload = function(e) {
-            imagePreview.src = e.target.result;
-            imagePreview.style.display = "block";
-        };
-        reader.readAsDataURL(file);
-    } else {
-        // Si no se selecciona ninguna imagen, restaurar la original
-        imagePreview.src = document.getElementById("petImagen").dataset.originalImage || 'default-image.png';
-    }
+// Función para cerrar el formulario
+document.getElementById("closeEditForm").addEventListener("click", function () {
+    document.getElementById("editPetFormContainer").style.display = "none";
 });
-
 
 function removePet(id) {
     const modal = document.getElementById('confirmModal');
@@ -427,11 +472,6 @@ function renderPagination(totalItems, limit, currentPage, callback) {
     }
 }
 
-// Detectar cambios en la barra de búsqueda
-document.getElementById('searchInput').addEventListener('input', () => {
-    fetchPetsSearch();
-});
-
 //////// Solicitudes /////////
 async function sendRequest(mascotaSolicitadaId, usuarioSolicitadoId) {
     const mascotaSolicitanteId = document.getElementById('myPetsSelector').value; // Obtener el ID de la mascota seleccionada
@@ -488,7 +528,7 @@ async function fetchSolicitudes() {
         }
     }
 
-    document.getElementById('solicitudesContainer').style.display = 'block'; // Mostrar solicitudes
+    document.getElementById('solicitudesContainer').style.display = 'block'; 
 }
 
 function displaySolicitudesRecibidas(requests) {

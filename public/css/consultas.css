@@ -67,12 +67,6 @@ body {
     box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
 }
 
-/* Títulos */
-h1, h3, h2 {
-    text-align: center;
-    font-weight: bold;
-}
-
 /* Animación de entrada */
 @keyframes fadeIn {
     from {
@@ -139,24 +133,6 @@ h1, h3, h2 {
 
 .close-edit-btn:hover {
     transform: scale(1.2);
-}
-
-/* Ajuste de estilo para los campos de formulario */
-fieldset {
-    border: 1px solid #ddd;
-    padding: 15px;
-    margin: 20px 0;
-    border-radius: 8px;
-}
-
-legend {
-    padding: 0 10px;
-    font-weight: bold;
-    color: #2a5934;
-}
-
-#actualizacionesContainer {
-    margin-top: 20px;
 }
 
 .tables {

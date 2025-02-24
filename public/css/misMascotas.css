@@ -1,4 +1,5 @@
 #petsContainer {
+    display: grid;
     grid-template-columns: repeat(3, 1fr); /* 3 columnas */
     gap: 20px; /* Espaciado entre tarjetas */
     justify-items: center; /* Centrar las tarjetas */
@@ -86,35 +87,36 @@
     background-color: #0056b3;
 }
 
-/* Show details*/
+/* Contenedor del modal */
 .pet-details-container {
     position: fixed;
     top: 0;
     left: 0;
     width: 100%;
     height: 100%;
-    background: rgba(0, 0, 0, 0.5); /* Fondo oscuro semitransparente */
+    background: rgba(0, 0, 0, 0.5);
     display: flex;
     align-items: center;
     justify-content: center;
-    z-index: 1000; /* Debe estar debajo del modal de confirmación */
+    z-index: 1000;
 }
 
-
-/* Ajustes en la tarjeta de detalles */
+/* Ajustar tamaño del modal */
 .pet-details-card {
-    background: rgba(249, 249, 249, 0.95);
-    padding: 25px;
+    display: flex;
+    flex-direction: column;
+    background: rgba(255, 239, 231, 0.98);
+    padding: 20px;
     border-radius: 15px;
-    max-width: 500px;
-    text-align: center;
+    max-width: 700px;
+    width: 90%;
     position: relative;
     box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.3);
-    width: 90%;
+    text-align: center;
     animation: fadeIn 0.3s ease-in-out;
 }
 
-/* Animación para hacerla más fluida */
+/* Animación de entrada */
 @keyframes fadeIn {
     from {
         opacity: 0;
@@ -126,16 +128,74 @@
     }
 }
 
-/* Botón de cerrar mejorado */
+/* Contenedor principal con flexbox */
+.pet-info-container {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+    width: 100%;
+    flex-direction: row;
+}
+
+/* Imagen más grande y ajustada */
+.pet-image {
+    width: 250px;
+    height: 250px;
+    border-radius: 15px;
+    object-fit: cover;
+}
+
+/* Contenedor de información */
+.pet-info {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    text-align: left;
+    position: relative;
+}
+
+/* Nombre con estilo de referencia */
+.pet-name{
+    align-items: center;
+    background: #E87E43;
+    padding: 10px 20px;
+    border-radius: 15px;
+    margin-bottom: 15px;
+    width: fit-content; 
+    top: -20px;
+    left: 0;
+    font-style: italic;
+    font-size: 28px;
+    color: black;
+    font-weight: bold;
+    margin-right: 10px;
+    margin-left: 24%;
+}
+
+/* Icono de pedigree */
+.gold-medal {
+    color: gold;
+    font-size: 20px;
+}
+
+/* Información */
+.pet-info p {
+    font-size: 18px;
+    color: #333;
+    margin: 5px 0;
+}
+
+/* Botón de cerrar */
 .close-btn {
     position: absolute;
     top: 10px;
     right: 10px;
-    font-size: 28px;
+    font-size: 40px;
     background: none;
     border: none;
     cursor: pointer;
-    color: #333;
+    color: #666;
     transition: transform 0.2s ease;
 }
 
@@ -143,29 +203,49 @@
     transform: scale(1.2);
 }
 
-/* Ajuste en los botones de acción */
+/* Contenedor de los botones alineados */
 .button-container {
     display: flex;
     justify-content: center;
-    gap: 10px;
-    margin-top: 20px;
+    gap: 15px;
+    margin-top: 15px;
+    flex-wrap: wrap;
 }
 
-.button-container button {
-    padding: 10px 18px;
-    font-size: 15px;
+/* Botones más estilizados */
+.edit-btn,
+.delete-btn {
+    padding: 12px 24px;
+    font-size: 18px;
     border-radius: 8px;
     cursor: pointer;
+    border: none;
     transition: background 0.3s ease;
+    width: auto;
+    text-align: center;
+    font-weight: bold;
+}
+
+/* Botón Editar */
+.edit-btn {
+    background: #E87E43;
+    color: white;
 }
 
 .edit-btn:hover {
     background-color: #ff9800;
 }
 
-.delete-btn:hover {
-    background-color: #d32f2f;
+/* Botón Eliminar */
+.delete-btn {
+    background: #D32F2F;
+    color: white;
 }
+
+.delete-btn:hover {
+    background-color: #b71c1c;
+}
+
 
 /* Modal de confirmación de eliminación */
 .modal {
@@ -220,3 +300,4 @@
         transform: scale(1);
     }
 }
+

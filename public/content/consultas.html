@@ -4,7 +4,8 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="../css/consultas.css">
-    <link rel="stylesheet" href="../css/formulario_pets.css">
+    <link rel="stylesheet" href="../css/Agregar.css">
+    <link rel="stylesheet" href="../css/Editar.css">
     <link rel="stylesheet" href="../css/misMascotas.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
     <title>Mascotas del Dueño</title>
@@ -32,6 +33,93 @@
     <!-- Contenedor para la vista detallada de la mascota -->
     <div id="petDetails" class="pet-details-container" style="display: none;"></div>
 
+    <div class="content-container" id="editPetFormContainer" style="display: none;">
+        <button id="closeEditForm" class="close-btn" style="display: none;">×</button>
+        <div class="form-section">  
+            <h2 id="editFormTitle">Editar Mascota</h2>
+            <div class="form-container">
+                <form id="editPetForm" enctype="multipart/form-data">
+                    <input type="hidden" id="editPetId">
+                    <div class="grid-container">
+                        <div class="input-group">
+                            <input type="text" id="editPetName" name="nombre" placeholder="Nombre mascota" required>
+                        </div>
+                        <div class="input-group upload-group">
+                            <label for="editPetImagen" class="upload-label">
+                                <i class="fas fa-camera"></i> Subir una foto
+                            </label>
+                            <input type="file" id="editPetImagen" name="imagen" accept="image/*" hidden>
+                            <img id="editImagePreview" src="" alt="Vista previa" style="display:none;">
+                        </div>
+                        <div class="input-group">
+                            <input type="text" id="editPetRaza" name="raza" placeholder="Raza" required>
+                        </div>               
+                        <div class="input-group">
+                            <select id="editPetTipo" name="tipo" required>
+                                <option value="">Tipo</option>
+                                <option value="Perro">Perro</option>
+                                <option value="Gato">Gato</option>
+                                <option value="Otro">Otro</option>
+                            </select>
+                        </div>
+                        <div class="input-group">
+                            <input type="text" id="editPetColor" name="color" placeholder="Color">
+                        </div>
+                        <div class="input-group">
+                            <select id="editPetTamaño" name="tamaño" required>
+                                <option value="">Tamaño</option>
+                                <option value="pequeño">Pequeño</option>
+                                <option value="mediano">Mediano</option>
+                                <option value="grande">Grande</option>
+                            </select>
+                        </div>
+                        <div class="input-group">
+                            <input type="number" id="editPetEdad" name="edad" placeholder="Edad" required>
+                        </div>
+                        <div class="input-group">
+                            <select id="editPetSexo" name="sexo" required>
+                                <option value="">Sexo</option>
+                                <option value="macho">Macho</option>
+                                <option value="hembra">Hembra</option>
+                            </select>
+                        </div>
+                        <div class="input-group full-width">
+                            <select id="editPetTemperamento" name="temperamento" required>
+                                <option value="">Temperamento</option>
+                                <option value="Amigable">Amigable</option>
+                                <option value="Activo">Activo</option>
+                                <option value="Tímido">Tímido</option>
+                                <option value="Curioso">Curioso</option>
+                                <option value="Tranquilo">Tranquilo</option>
+                                <option value="Obediente">Obediente</option>
+                                <option value="Ansioso">Ansioso</option>
+                                <option value="Juguetón">Juguetón</option>
+                                <option value="Terco">Terco</option>
+                                <option value="Dominante">Dominante</option>
+                            </select>
+                        </div>
+                        <div class="input-group">
+                            <label for="editPetPedigree">
+                                <input type="checkbox" id="editPetPedigree" name="pedigree"> ¿Tiene Pedigree?
+                            </label>
+                        </div>
+                        <div class="input-group full-width">
+                            <input type="text" id="editPetVacunas" name="vacunas" placeholder="Vacunas (separadas por comas)">
+                        </div>
+                        <div class="input-group upload-group full-width">
+                            <label for="editPetMedia" class="upload-label">
+                                <i class="fas fa-images"></i> Subir imágenes o videos
+                            </label>
+                            <input type="file" id="editPetMedia" name="media" accept="image/*,video/*" multiple hidden>
+                            <div id="editMediaPreviewContainer"></div>
+                        </div>
+                    </div>
+                    <button type="submit" class="edit-btn-submit" id="editFormSubmitButton">Guardar Cambios</button>
+                </form>
+            </div>
+        </div>
+    </div>
+    
         <!-- Modal de confirmación -->
     <div id="confirmModal" class="modal" style="display: none;">
         <div class="modal-content">
@@ -40,24 +128,8 @@
             <button id="cancelDelete">Cancelar</button>
         </div>
     </div>
-
-    <!-- Formulario de Solicitud de Mascota -->
-    <div id="requestContainer" class="content-container" style="display: none;">
-        <h1>Solicitar Mascota</h1>
-        <!-- Campo de búsqueda -->
-        <input type="text" id="searchInput" placeholder="Buscar mascotas..." onkeyup="handleSearch()">
-        <button id="searchButton" onclick="handleSearch()">Buscar</button>
     
-        <!-- Selector de mascotas -->
-        <div class="elegir">
-            <label for="myPetsSelector">Elige tu mascota:</label>
-            <select id="myPetsSelector"></select>
-        </div>
-        <!-- Tabla o contenedor donde se mostrarán las mascotas -->
-        <div id="allPetsTable"></div>
-    </div>
-    
-<div class="content-container" id="addPetForm" style="display: none;">
+<div class="content-container" id="addPetForm" style="display: none;"> 
         <div class="form-section">  
             <h2 id="formTitle">Agregar Mascota</h2>
             <div class="form-container">

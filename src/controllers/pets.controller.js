@@ -100,22 +100,9 @@ export const removePet = async (req, res) => {
 // Actualizar una mascota
 export const updatePet = async (req, res) => {
     try {
-        const { nombre, raza, tipo, color, tamaño, edad, sexo, vacunas, temperamento, historial_cruzas, pedigree } = req.body;
+        const { imagen, nombre, raza, tipo, color, tamaño, edad, sexo, vacunas, temperamento, historial_cruzas, pedigree, media } = req.body;
         
-        const updates = { nombre, raza, tipo, color, tamaño, edad, sexo, vacunas, temperamento, historial_cruzas, pedigree };
-
-        // Log para verificar los archivos recibidos
-        console.log("Archivos recibidos:", req.files);
-
-        // Verifica si hay una imagen nueva y obtén su URL
-        if (req.files?.imagen) {
-            updates.imagen = req.files.imagen[0].path;
-        }
-
-        // Verifica si hay archivos multimedia nuevos
-        if (req.files?.media) {
-            updates.media = req.files.media.map(file => file.path);
-        }
+        const updates = { imagen, nombre, raza, tipo, color, tamaño, edad, sexo, vacunas, temperamento, historial_cruzas, pedigree, media };
 
         // Actualiza la mascota en la base de datos
         const updatedPet = await updatePetInService(req.params.id, updates);

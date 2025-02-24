@@ -57,6 +57,7 @@ document.getElementById("editProfile").addEventListener("click", async function 
     }
 
     const userData = {
+        imagen: document.getElementById("profileImage").value,
         nombre: document.getElementById("userName").value,
         email: document.getElementById("userEmail").value,
         telefono: document.getElementById("userPhone").value,

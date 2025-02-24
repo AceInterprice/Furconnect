@@ -12,6 +12,7 @@ import swaggerUiExpress from 'swagger-ui-express';
 import swaggerJsDoc from 'swagger-jsdoc';
 import connectDB from "./db/db.js";
 import swaggerOptions from './swagger.js';
+import CloudinaryRoutes from './routes/cloudinary.routes.js';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -55,5 +56,6 @@ app.use(petsRoutes);
 app.use(usersRoutes);
 app.use(solicitudesRoutes);
 app.use(chatRoomRoutes);
+app.use(CloudinaryRoutes);
 
 export default app;

@@ -20,7 +20,6 @@ const userSchema = new mongoose.Schema({
     type: String,
     match: /^[0-9]{10}$/, 
     description: "Número de teléfono de 10 dígitos.",
-    maxlength: 10
   },
   ciudad: String,
   estado: { type: String, required: true },

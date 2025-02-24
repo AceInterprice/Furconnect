@@ -1,5 +1,5 @@
-/* Contenedor principal del formulario */
-#addPetForm {
+/* Contenedor principal del formulario de edición */
+#editPetFormContainer {
     width: 100%;
     max-width: 700px; /* Aumentamos un poco el ancho */
     display: flex;
@@ -8,6 +8,14 @@
     justify-content: center;
     padding: 30px 60px; /* Más padding para mejor separación */
     margin: 40px auto; /* Centramos el formulario verticalmente */
+    position: fixed; /* Se mantiene sobre la página */
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background: white;
+    box-shadow: 0px 5px 15px rgba(0, 0, 0, 0.2);
+    z-index: 1000;
+    border-radius: 10px;
 }
 
 /* Título del formulario */
@@ -19,7 +27,7 @@ h2 {
 }
 
 /* Grid para los inputs */
-.grid-container {
+.edit-grid-container {
     display: grid;
     grid-template-columns: repeat(2, 1fr);
     gap: 30px; /* Más espacio entre los inputs */
@@ -27,7 +35,7 @@ h2 {
 }
 
 /* Ajuste de inputs */
-.input-group {
+.edit-input-group {
     display: flex;
     flex-direction: column;
 }
@@ -42,7 +50,7 @@ input, select {
 }
 
 /* Ajuste de input de pedigree */
-.pedigree-group {
+.edit-pedigree-group {
     grid-column: span 2;
     display: flex;
     align-items: center;
@@ -56,12 +64,12 @@ input[type="checkbox"] {
 }
 
 /* Input de vacunas ocupa todo el ancho */
-.vacunas-group {
+.edit-vacunas-group {
     grid-column: span 2;
 }
 
 /* Botón de subir imagen */
-.upload-group {
+.edit-upload-group {
     display: flex;
     flex-direction: row;
     align-items: center;
@@ -71,7 +79,7 @@ input[type="checkbox"] {
 }
 
 /* Vista previa de imagen */
-#imagePreview {
+#editImagePreview {
     width: 100px;
     height: 100px;
     object-fit: cover;
@@ -79,8 +87,8 @@ input[type="checkbox"] {
     margin-top: 5px;
 }
 
-/* Botón de agregar */
-.btn-submit {
+/* Botón de guardar cambios */
+.edit-btn-submit {
     background: #5c3d2e;
     color: white;
     border: none;
@@ -92,4 +100,19 @@ input[type="checkbox"] {
     margin: 20px auto 0 auto; /* Centramos horizontalmente */
     display: block;
     text-align: center;
+}
+
+.close-btn {
+    position: absolute;
+    top: 10px;
+    right: 15px;
+    background: transparent;
+    border: none;
+    font-size: 24px;
+    cursor: pointer;
+    color: #333;
+}
+
+.close-btn:hover {
+    color: red;
 }

@@ -4,7 +4,7 @@ import mongoose from 'mongoose';
 const userSchema = new mongoose.Schema({
   imagen: {type: String, description: "Foto de perfil"},
   nombre: { type: String, required: true },
-  apellido: {type: String, require: true},
+  apellido: {type: String, required: true},
   email: { 
     type: String, 
     required: true, 

@@ -9,29 +9,43 @@ import {
     searchPetsByText 
 } from "../services/pets.service.js";
 
-// Buscar mascotas por texto
 export const searchPets = async (req, res) => {
     try {
         const { query, page = 1, limit = 20 } = req.query;
+
         if (!query) {
-            return res.status(400).json({ message: 'El parámetro de búsqueda es obligatorio' });
+            return res.status(400).json({ message: "El parámetro de búsqueda es obligatorio" });
         }
 
-        const { pets, total } = await searchPetsByText(query, parseInt(page), parseInt(limit));
+        // Obtener la ubicación del usuario logueado desde req.user
+        const { ciudad, estado, pais } = req.user;
+
+        if (!ciudad || !estado || !pais) {
+            return res.status(400).json({ message: "No se pudo determinar la ubicación del usuario" });
+        }
+
+        // Pasar la ubicación como un objeto
+        const userLocation = { ciudad, estado, pais };
+
+        // Llamar al servicio con la ubicación del usuario
+        const { pets, total } = await searchPetsByText(query, userLocation, parseInt(page), parseInt(limit));
 
         if (pets.length === 0) {
-            return res.status(404).json({ message: 'No se encontraron mascotas con esos criterios' });
+            return res.status(404).json({ message: "No se encontraron mascotas con esos criterios" });
         }
+
         res.status(200).json({
             pets,
             total,
             page: parseInt(page),
             pages: Math.ceil(total / limit)
         });
+
     } catch (error) {
         res.status(500).json({ error: error.message });
     }
 };
+
 
 // Listar todas las mascotas
 export const listPets = async (req, res) => {

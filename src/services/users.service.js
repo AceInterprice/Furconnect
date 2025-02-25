@@ -14,7 +14,7 @@ export const getUserById = async (id) => {
 };
 
 // Crear un nuevo usuario
-export const createUser = async (imagen, nombre, apellido, email, password, telefono, ciudad, estado, pais, role = 'user') => {
+export const createUser = async (imagen, nombre, apellido, email, password, telefono, ciudad, estado, pais, role = 'user', estatus = 'gratis') => {
     const userExist = await User.findOne({ email }); // Verifica si el correo ya está registrado
     if (userExist) throw new Error('El correo electrónico ya está registrado.');
 
@@ -28,7 +28,7 @@ export const createUser = async (imagen, nombre, apellido, email, password, tele
     const hashedPassword = await bcrypt.hash(password, 10);
 
     // Crea un nuevo usuario
-    const newUser = new User({ imagen, nombre, apellido, email, password: hashedPassword, telefono, ciudad, estado, pais, role });
+    const newUser = new User({ imagen, nombre, apellido, email, password: hashedPassword, telefono, ciudad, estado, pais, role, estatus });
 
     await newUser.save(); // Guarda el nuevo usuario en la base de datos
     return newUser;
@@ -60,7 +60,8 @@ export const loginUsers = async (email, password) => {
             ciudad: user.ciudad,
             estado: user.estado,
             pais: user.pais,
-            role: user.role
+            role: user.role, 
+            estatus: user.estatus
         }
     };
 };

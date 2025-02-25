@@ -53,15 +53,14 @@ export const getUser = async (req, res) => {
 // Agregar un nuevo usuario
 export const addUser = async (req, res) => {
     try {
-        const {nombre, apellido, email, password, telefono, ciudad, estado, pais, role } = req.body; 
+        const {nombre, apellido, email, password, telefono, ciudad, estado, pais, role, estatus} = req.body; 
 
         // Validación: Asegurar que los campos obligatorios están completos
         if (!nombre || !apellido || !email || !password || !telefono || !ciudad || !estado || !pais) {
             return res.status(400).json({ error: "Todos los campos obligatorios deben completarse." });
         }
-        const imagen = req.files?.imagen ? req.files.imagen[0].path : null;
 
-        const newUser = await createUser(imagen, nombre, apellido, email, password, telefono, ciudad, estado, pais, role);
+        const newUser = await createUser(imagen, nombre, apellido, email, password, telefono, ciudad, estado, pais, role, estatus);
         res.status(201).json({ message: 'Usuario creado', user: newUser });
     } catch (error) {
         res.status(400).json({ error: error.message });

@@ -1,14 +1,16 @@
 import Pet from '../models/pet.model.js';
 import mongoose from 'mongoose';
 
-// Buscar mascotas por filtros de texto específico
-export const searchPetsByText = async (query, page = 1, limit = 20) => {
+// Buscar mascotas por filtros de texto específico y ubicación del usuario
+export const searchPetsByText = async (query, userLocation, page = 1, limit = 20) => {
     try {
         page = Math.max(1, parseInt(page));
         limit = Math.max(1, parseInt(limit));
 
         const regex = new RegExp(query, "i");
-        const filters = {
+
+        // Filtros de búsqueda por texto
+        const textFilters = {
             $or: [
                 { nombre: regex },
                 { raza: regex },
@@ -18,13 +20,22 @@ export const searchPetsByText = async (query, page = 1, limit = 20) => {
             ]
         };
 
+        // Filtro de ubicación basado en la del usuario
+        const locationFilter = {
+            "usuario_id.pais": userLocation.pais,
+            "usuario_id.estado": userLocation.estado,
+            "usuario_id.ciudad": userLocation.ciudad
+        };
+
+        const finalFilters = { ...textFilters, ...locationFilter };
+
         const [pets, total] = await Promise.all([
-            Pet.find(filters)
-                .populate('usuario_id', 'nombre email') // Solo carga datos esenciales del usuario
+            Pet.find(finalFilters)
+                .populate('usuario_id', 'nombre email pais estado ciudad')
                 .skip((page - 1) * limit)
                 .limit(limit),
 
-            Pet.countDocuments(filters)
+            Pet.countDocuments(finalFilters)
         ]);
 
         return { pets, total, page, pages: Math.ceil(total / limit) };

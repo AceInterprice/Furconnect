@@ -46,7 +46,7 @@ export const loginUsers = async (email, password) => {
         throw new Error('Contraseña incorrecta');
     }
 
-    const token = jwt.sign({ id: user._id, role: user.role }, process.env.JWT_SECRET, { expiresIn: '1h' }); // Genera el token JWT
+    const token = jwt.sign({ id: user._id, role: user.role, ciudad: user.ciudad, estado: user.estado, pais: user.pais }, process.env.JWT_SECRET, { expiresIn: '1h' }); // Genera el token JWT
 
     return { 
         token, 

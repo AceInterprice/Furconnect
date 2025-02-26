@@ -53,7 +53,7 @@ export const getUser = async (req, res) => {
 // Agregar un nuevo usuario
 export const addUser = async (req, res) => {
     try {
-        const {nombre, apellido, email, password, telefono, ciudad, estado, pais, role, estatus} = req.body; 
+        const {imagen, nombre, apellido, email, password, telefono, ciudad, estado, pais, role, estatus} = req.body; 
 
         // Validación: Asegurar que los campos obligatorios están completos
         if (!nombre || !apellido || !email || !password || !telefono || !ciudad || !estado || !pais) {
@@ -96,11 +96,6 @@ export const updateUser = async (req, res) => {
 
         const { imagen, nombre, apellido, email, password, telefono, ciudad, estado, pais } = req.body;
         const updatedUser = await updateUserById(id, imagen, nombre, apellido, email, password, telefono, ciudad, estado, pais);
-
-          // Verifica si hay una imagen nueva y obtén su URL
-          if (req.files?.imagen) {
-            updates.imagen = req.files.imagen[0].path;
-        }
 
         if (!updatedUser) return res.status(404).json({ message: 'Usuario no encontrado' });
 

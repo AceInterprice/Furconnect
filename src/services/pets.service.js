@@ -1,7 +1,6 @@
 import Pet from '../models/pet.model.js';
 import mongoose from 'mongoose';
 
-// Buscar mascotas por filtros de texto específico y ubicación del usuario
 export const searchPetsByText = async (query, userLocation, page = 1, limit = 20) => {
     try {
         page = Math.max(1, parseInt(page));
@@ -12,33 +11,66 @@ export const searchPetsByText = async (query, userLocation, page = 1, limit = 20
         // Filtros de búsqueda por texto
         const textFilters = {
             $or: [
-                { nombre: regex },
+                { edad: regex },
                 { raza: regex },
                 { tipo: regex },
                 { color: regex },
-                { temperamento: regex }
+                { temperamento: regex }, 
+                {sexo: regex}
             ]
         };
 
-        // Filtro de ubicación basado en la del usuario
-        const locationFilter = {
-            "usuario_id.pais": userLocation.pais,
-            "usuario_id.estado": userLocation.estado,
-            "usuario_id.ciudad": userLocation.ciudad
-        };
-
-        const finalFilters = { ...textFilters, ...locationFilter };
-
-        const [pets, total] = await Promise.all([
-            Pet.find(finalFilters)
-                .populate('usuario_id', 'nombre email pais estado ciudad')
-                .skip((page - 1) * limit)
-                .limit(limit),
-
-            Pet.countDocuments(finalFilters)
+        // Consulta con agregación para unir la ubicación del usuario
+        const pets = await Pet.aggregate([
+            {
+                $lookup: {
+                    from: "users", // Nombre de la colección de usuarios en MongoDB
+                    localField: "usuario_id",
+                    foreignField: "_id",
+                    as: "usuario"
+                }
+            },
+            { $unwind: "$usuario" }, // Convertir el array en objeto
+            {
+                $match: {
+                    "usuario.pais": userLocation.pais,
+                    "usuario.estado": userLocation.estado,
+                    "usuario.ciudad": userLocation.ciudad
+                }
+            },
+            { $match: textFilters }, // Aplicar el filtro de texto
+            { $skip: (page - 1) * limit },
+            { $limit: limit }
         ]);
 
-        return { pets, total, page, pages: Math.ceil(total / limit) };
+        // Contar el total de documentos con los mismos filtros
+        const total = await Pet.aggregate([
+            {
+                $lookup: {
+                    from: "users",
+                    localField: "usuario_id",
+                    foreignField: "_id",
+                    as: "usuario"
+                }
+            },
+            { $unwind: "$usuario" },
+            {
+                $match: {
+                    "usuario.pais": userLocation.pais,
+                    "usuario.estado": userLocation.estado,
+                    "usuario.ciudad": userLocation.ciudad
+                }
+            },
+            { $match: textFilters },
+            { $count: "total" }
+        ]);
+
+        return {
+            pets,
+            total: total.length > 0 ? total[0].total : 0,
+            page,
+            pages: Math.ceil((total.length > 0 ? total[0].total : 0) / limit)
+        };
     } catch (error) {
         throw new Error("Error al buscar mascotas");
     }

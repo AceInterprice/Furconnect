@@ -17,35 +17,37 @@ export const searchPets = async (req, res) => {
             return res.status(400).json({ message: "El parámetro de búsqueda es obligatorio" });
         }
 
-        // Obtener la ubicación del usuario logueado desde req.user
-        const { ciudad, estado, pais } = req.user;
-
-        if (!ciudad || !estado || !pais) {
+        // Verificar que req.user existe y tiene ubicación
+        if (!req.user || !req.user.ciudad || !req.user.estado || !req.user.pais) {
             return res.status(400).json({ message: "No se pudo determinar la ubicación del usuario" });
         }
 
-        // Pasar la ubicación como un objeto
-        const userLocation = { ciudad, estado, pais };
+        // Obtener ubicación del usuario
+        const userLocation = {
+            ciudad: req.user.ciudad,
+            estado: req.user.estado,
+            pais: req.user.pais
+        };
+
+        // Validar que page y limit sean números válidos
+        const pageNumber = isNaN(parseInt(page)) ? 1 : Math.max(1, parseInt(page));
+        const limitNumber = isNaN(parseInt(limit)) ? 20 : Math.max(1, parseInt(limit));
 
         // Llamar al servicio con la ubicación del usuario
-        const { pets, total } = await searchPetsByText(query, userLocation, parseInt(page), parseInt(limit));
+        const { pets, total } = await searchPetsByText(query, userLocation, pageNumber, limitNumber);
 
-        if (pets.length === 0) {
-            return res.status(404).json({ message: "No se encontraron mascotas con esos criterios" });
-        }
-
+        // En lugar de devolver 404, devolvemos 200 con un array vacío si no hay resultados
         res.status(200).json({
             pets,
             total,
-            page: parseInt(page),
-            pages: Math.ceil(total / limit)
+            page: pageNumber,
+            pages: Math.ceil(total / limitNumber)
         });
 
     } catch (error) {
         res.status(500).json({ error: error.message });
     }
 };
-
 
 // Listar todas las mascotas
 export const listPets = async (req, res) => {

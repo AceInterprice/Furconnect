@@ -1,36 +1,38 @@
 import Pet from '../models/pet.model.js';
 import mongoose from 'mongoose';
 
-export const searchPetsByText = async (query, userLocation, page = 1, limit = 20) => {
+export const searchPetsByText = async (queries, userLocation, page = 1, limit = 20) => {
     try {
         page = Math.max(1, parseInt(page));
         limit = Math.max(1, parseInt(limit));
 
-        const regex = new RegExp(query, "i");
+        if (!Array.isArray(queries)) {
+            queries = [queries];
+        }
 
-        // Filtros de búsqueda por texto
+        const regexQueries = queries.map(query => new RegExp(query, "i"));
+
         const textFilters = {
-            $or: [
+            $or: regexQueries.flatMap(regex => [
                 { edad: regex },
                 { raza: regex },
                 { tipo: regex },
                 { color: regex },
-                { temperamento: regex }, 
-                {sexo: regex}
-            ]
+                { temperamento: regex },
+                { sexo: regex }
+            ])
         };
 
-        // Consulta con agregación para unir la ubicación del usuario
         const pets = await Pet.aggregate([
             {
                 $lookup: {
-                    from: "users", // Nombre de la colección de usuarios en MongoDB
+                    from: "users",
                     localField: "usuario_id",
                     foreignField: "_id",
                     as: "usuario"
                 }
             },
-            { $unwind: "$usuario" }, // Convertir el array en objeto
+            { $unwind: "$usuario" },
             {
                 $match: {
                     "usuario.pais": userLocation.pais,
@@ -38,12 +40,34 @@ export const searchPetsByText = async (query, userLocation, page = 1, limit = 20
                     "usuario.ciudad": userLocation.ciudad
                 }
             },
-            { $match: textFilters }, // Aplicar el filtro de texto
+            { $match: textFilters },
+            {
+                $project: {
+                    imagen: 1,
+                    nombre: 1,
+                    raza: 1,
+                    tipo: 1,
+                    color: 1,
+                    tamaño: 1,
+                    edad: 1,
+                    sexo: 1,
+                    pedigree: 1,
+                    vacunas: 1,
+                    temperamento: 1,
+                    historial_cruzas: 1,
+                    media: 1,
+                    fecha_registro: 1,
+                    usuario: { 
+                        _id: 1, 
+                        nombre: 1, 
+                        email: 1 
+                    } // Solo devuelve estos 3 campos del usuario
+                }
+            },
             { $skip: (page - 1) * limit },
             { $limit: limit }
         ]);
 
-        // Contar el total de documentos con los mismos filtros
         const total = await Pet.aggregate([
             {
                 $lookup: {

@@ -11,32 +11,24 @@ import {
 
 export const searchPets = async (req, res) => {
     try {
-        const { query, page = 1, limit = 20 } = req.query;
+        const { query, ciudad, estado, pais, page = 1, limit = 20 } = req.query;
 
-        if (!query) {
-            return res.status(400).json({ message: "El parámetro de búsqueda es obligatorio" });
-        }
-
-        // Verificar que req.user existe y tiene ubicación
-        if (!req.user || !req.user.ciudad || !req.user.estado || !req.user.pais) {
-            return res.status(400).json({ message: "No se pudo determinar la ubicación del usuario" });
-        }
-
-        // Obtener ubicación del usuario
-        const userLocation = {
-            ciudad: req.user.ciudad,
-            estado: req.user.estado,
-            pais: req.user.pais
-        };
+        // Convertir query en un array si es un solo valor
+        const queries = query ? (Array.isArray(query) ? query : [query]) : [];
 
         // Validar que page y limit sean números válidos
         const pageNumber = isNaN(parseInt(page)) ? 1 : Math.max(1, parseInt(page));
         const limitNumber = isNaN(parseInt(limit)) ? 20 : Math.max(1, parseInt(limit));
 
-        // Llamar al servicio con la ubicación del usuario
-        const { pets, total } = await searchPetsByText(query, userLocation, pageNumber, limitNumber);
+        // Construir objeto de filtros (solo incluir los que se hayan enviado)
+        const filters = {};
+        if (ciudad) filters.ciudad = ciudad;
+        if (estado) filters.estado = estado;
+        if (pais) filters.pais = pais;
 
-        // En lugar de devolver 404, devolvemos 200 con un array vacío si no hay resultados
+        // Llamar al servicio con los filtros ingresados por el usuario
+        const { pets, total } = await searchPetsByText(queries, filters, pageNumber, limitNumber);
+
         res.status(200).json({
             pets,
             total,

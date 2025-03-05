@@ -1,7 +1,7 @@
 import Pet from '../models/pet.model.js';
 import mongoose from 'mongoose';
 
-export const searchPetsByText = async (queries, userLocation, page = 1, limit = 20) => {
+export const searchPetsByText = async (queries = [], filters = {}, page = 1, limit = 20) => {
     try {
         page = Math.max(1, parseInt(page));
         limit = Math.max(1, parseInt(limit));
@@ -10,90 +10,43 @@ export const searchPetsByText = async (queries, userLocation, page = 1, limit = 
             queries = [queries];
         }
 
+        // Convertir cada término de búsqueda en una expresión regular
         const regexQueries = queries.map(query => new RegExp(query, "i"));
 
-        const textFilters = {
-            $or: regexQueries.flatMap(regex => [
-                { edad: regex },
-                { raza: regex },
-                { tipo: regex },
-                { color: regex },
-                { temperamento: regex },
-                { sexo: regex }
-            ])
-        };
+        // Construcción del filtro de búsqueda
+        let matchFilters = {};
 
-        const pets = await Pet.aggregate([
-            {
-                $lookup: {
-                    from: "users",
-                    localField: "usuario_id",
-                    foreignField: "_id",
-                    as: "usuario"
-                }
-            },
-            { $unwind: "$usuario" },
-            {
-                $match: {
-                    "usuario.pais": userLocation.pais,
-                    "usuario.estado": userLocation.estado,
-                    "usuario.ciudad": userLocation.ciudad
-                }
-            },
-            { $match: textFilters },
-            {
-                $project: {
-                    imagen: 1,
-                    nombre: 1,
-                    raza: 1,
-                    tipo: 1,
-                    color: 1,
-                    tamaño: 1,
-                    edad: 1,
-                    sexo: 1,
-                    pedigree: 1,
-                    vacunas: 1,
-                    temperamento: 1,
-                    historial_cruzas: 1,
-                    media: 1,
-                    fecha_registro: 1,
-                    usuario: { 
-                        _id: 1, 
-                        nombre: 1, 
-                        email: 1 
-                    } // Solo devuelve estos 3 campos del usuario
-                }
-            },
-            { $skip: (page - 1) * limit },
-            { $limit: limit }
-        ]);
+        if (regexQueries.length > 0) {
+            matchFilters.$and = regexQueries.map(regex => ({
+                $or: [
+                    { raza: regex },
+                    { tipo: regex },
+                    { color: regex },
+                    { temperamento: regex },
+                    { sexo: regex }
+                ]
+            }));
+        }
 
-        const total = await Pet.aggregate([
-            {
-                $lookup: {
-                    from: "users",
-                    localField: "usuario_id",
-                    foreignField: "_id",
-                    as: "usuario"
-                }
-            },
-            { $unwind: "$usuario" },
-            {
-                $match: {
-                    "usuario.pais": userLocation.pais,
-                    "usuario.estado": userLocation.estado,
-                    "usuario.ciudad": userLocation.ciudad
-                }
-            },
-            { $match: textFilters },
-            { $count: "total" }
+        // Aplicar filtros de país, estado y ciudad si están presentes
+        if (filters.pais) matchFilters["ubicacion.pais"] = filters.pais;
+        if (filters.estado) matchFilters["ubicacion.estado"] = filters.estado;
+        if (filters.ciudad) matchFilters["ubicacion.ciudad"] = filters.ciudad;
+
+        // Obtener mascotas con paginación y filtros aplicados
+        const [pets, total] = await Promise.all([
+            Pet.find(matchFilters)
+                .populate("usuario_id", "nombre email") // Solo trae _id, nombre y email
+                .skip((page - 1) * limit)
+                .limit(limit),
+            Pet.countDocuments(matchFilters)
         ]);
 
         return {
-            pets,
-            total: total.length > 0 ? total[0].total : 0,
+            total,
             page,
-            pages: Math.ceil((total.length > 0 ? total[0].total : 0) / limit)
+            pages: Math.ceil(total / limit),
+            pets
         };
     } catch (error) {
         throw new Error("Error al buscar mascotas");

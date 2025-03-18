@@ -7,7 +7,7 @@ const petSchema = new mongoose.Schema({
   tipo: { type: String, required: true },
   color: String,
   tamaño: { type: String, enum: ["pequeño", "mediano", "grande"] },
-  edad: { type: Number, min: 0, required: true },
+  edad: { type: Number, min: 1, required: true },
   sexo: { type: String, enum: ["macho", "hembra"], required: true },
   pedigree: { type: Boolean, default: false },
   vacunas: [{ type: String }],
@@ -26,6 +26,9 @@ const petSchema = new mongoose.Schema({
       description: "URL de imágenes o videos de la mascota",
     }
   ],
+  pais: String,
+  estado: String,
+  ciudad: String,
   fecha_registro: { type: Date, default: Date.now }
 });
 

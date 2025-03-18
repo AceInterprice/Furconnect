@@ -1,55 +1,63 @@
 import Pet from '../models/pet.model.js';
+import User from "../models/user.model.js";
 import mongoose from 'mongoose';
 
-export const searchPetsByText = async (queries = [], filters = {}, page = 1, limit = 20) => {
+export const searchPetsByText = async (filters = {}, locationFilters = {}, page = 1, limit = 20) => {
     try {
         page = Math.max(1, parseInt(page));
         limit = Math.max(1, parseInt(limit));
 
-        if (!Array.isArray(queries)) {
-            queries = [queries];
-        }
-
-        // Convertir cada término de búsqueda en una expresión regular
-        const regexQueries = queries.map(query => new RegExp(query, "i"));
-
-        // Construcción del filtro de búsqueda
         let matchFilters = {};
 
-        if (regexQueries.length > 0) {
-            matchFilters.$and = regexQueries.map(regex => ({
-                $or: [
-                    { raza: regex },
-                    { tipo: regex },
-                    { color: regex },
-                    { temperamento: regex },
-                    { sexo: regex }
-                ]
-            }));
+        // 🔹 Filtrar por raza, tipo, color, temperamento, sexo
+        if (filters.raza) matchFilters.raza = new RegExp(filters.raza, "i");
+        if (filters.tipo) matchFilters.tipo = new RegExp(filters.tipo, "i");
+        if (filters.color) matchFilters.color = new RegExp(filters.color, "i");
+        if (filters.temperamento) matchFilters.temperamento = new RegExp(filters.temperamento, "i");
+        if (filters.sexo) matchFilters.sexo = filters.sexo;
+        if (filters.tamaño) matchFilters.tamaño = filters.tamaño;
+
+        // 🔹 Filtrar por edad en rangos
+        if (filters.edad) {
+            switch (filters.edad) {
+                case "1-5":
+                    matchFilters.edad = { $gte: 1, $lte: 5 };
+                    break;
+                case "6-10":
+                    matchFilters.edad = { $gte: 6, $lte: 10 };
+                    break;
+                case "11+":
+                    matchFilters.edad = { $gte: 11 };
+                    break;
+            }
         }
 
-        // Aplicar filtros de país, estado y ciudad si están presentes
-        if (filters.pais) matchFilters["ubicacion.pais"] = filters.pais;
-        if (filters.estado) matchFilters["ubicacion.estado"] = filters.estado;
-        if (filters.ciudad) matchFilters["ubicacion.ciudad"] = filters.ciudad;
+        // 🔹 Filtrar directamente por ubicación en la colección de mascotas
+        if (locationFilters.pais) matchFilters.pais = new RegExp(locationFilters.pais, "i");
+        if (locationFilters.estado) matchFilters.estado = new RegExp(locationFilters.estado, "i");
+        if (locationFilters.ciudad) matchFilters.ciudad = new RegExp(locationFilters.ciudad, "i");
 
-        // Obtener mascotas con paginación y filtros aplicados
-        const [pets, total] = await Promise.all([
-            Pet.find(matchFilters)
-                .populate("usuario_id", "nombre email") // Solo trae _id, nombre y email
-                .skip((page - 1) * limit)
-                .limit(limit),
-            Pet.countDocuments(matchFilters)
-        ]);
+        // 🔹 Obtener el total de registros
+        const total = await Pet.countDocuments(matchFilters);
+
+        // 🔹 Buscar mascotas con los filtros y paginación
+        const pets = await Pet.find(matchFilters)
+            .populate("usuario_id", "nombre email pais estado ciudad")
+            .skip((page - 1) * limit)
+            .limit(limit); 
+
+        if (total === 0) {
+            return { total, page, pages: 0, pets: [], message: "No hay búsquedas que coincidan con los filtros." };
+        }
 
         return {
             total,
             page,
             pages: Math.ceil(total / limit),
-            pets
+            pets,
         };
     } catch (error) {
-        throw new Error("Error al buscar mascotas");
+        throw new Error("Error al buscar mascotas: " + error.message);
     }
 };
 
@@ -96,11 +104,15 @@ export const getPetsByOwnerId = async (ownerId) => {
     }
 };
 
-// Agregar una nueva mascota
 export const addNewPet = async (usuario_id, imagen, nombre, raza, tipo, color, tamaño, edad, sexo, vacunas, temperamento, historial_cruzas, media, pedigree) => {
     try {
         if (!mongoose.Types.ObjectId.isValid(usuario_id)) throw new Error("ID de usuario inválido");
+        
+        // 🔹 Buscar al usuario en la base de datos
+        const usuario = await User.findById(usuario_id);
+        if (!usuario) throw new Error("Usuario no encontrado");
 
+        // 🔹 Crear nueva mascota con la ubicación del usuario
         const newPet = new Pet({ 
             usuario_id,
             imagen, 
@@ -115,7 +127,10 @@ export const addNewPet = async (usuario_id, imagen, nombre, raza, tipo, color, t
             temperamento, 
             historial_cruzas, 
             media,
-            pedigree
+            pedigree,
+            pais: usuario.pais,   // 🔹 Guardamos la ubicación del dueño
+            estado: usuario.estado,
+            ciudad: usuario.ciudad
         });
 
         await newPet.save();

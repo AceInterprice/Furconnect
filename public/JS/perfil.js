@@ -33,6 +33,7 @@ async function loadUserProfile() {
         const user = await response.json();
         
         document.getElementById("userName").value = user.nombre;
+        document.getElementById("userLastname").value = user.apellido || "";
         document.getElementById("userEmail").value = user.email;
         document.getElementById("userPhone").value = user.telefono || "";
         document.getElementById("userCountry").value = user.pais || "";
@@ -59,6 +60,7 @@ document.getElementById("editProfile").addEventListener("click", async function 
     const userData = {
         imagen: document.getElementById("profileImage").value,
         nombre: document.getElementById("userName").value,
+        apellido: document.getElementById("userLastname").value,
         email: document.getElementById("userEmail").value,
         telefono: document.getElementById("userPhone").value,
         pais: document.getElementById("userCountry").value,

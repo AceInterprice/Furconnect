@@ -59,6 +59,7 @@ body {
 }
 
 #solicitudesContainer{
+    display: block;
     padding: 20px;
     margin: 20px auto;
     background: #fff;

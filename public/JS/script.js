@@ -38,7 +38,6 @@ async function fetchPets() {
 
         const pets = await response.json();
         displayUserPets(pets);
-        populatePetSelector(pets);
         document.getElementById('petsContainer').style.display = 'grid';
     } catch (error) {
         alert('Error al conectar con el servidor.');
@@ -105,18 +104,6 @@ function showPetDetails(id, nombre, raza, tipo, color, tamaño, edad, sexo, pedi
 
 function closePetDetails() {
     document.getElementById('petDetails').style.display = 'none';
-}
-
-function populatePetSelector(pets) {
-    const selector = document.getElementById('myPetsSelector');
-    selector.innerHTML = ''; // Limpiar el selector
-
-    pets.forEach(pet => {
-        const option = document.createElement('option');
-        option.value = pet._id;
-        option.textContent = pet.nombre; // Mostrar el nombre de la mascota
-        selector.appendChild(option);
-    });
 }
 
 async function getSignedURL() {
@@ -591,7 +578,6 @@ function displaySolicitudes(requests, tableBodySelector, showActions) {
         tableBody.appendChild(row);
     });
 }
-
 
 async function updateSolicitudEstado(id, nuevoEstado) {
     const token = getToken();

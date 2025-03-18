@@ -77,6 +77,16 @@ h2 {
     color: #666;
 }
 
+.input-group .toggle-password {
+    right: 10px;
+    cursor: pointer;
+    color: #666;
+}
+
+.input-group .toggle-password:hover {
+    color: #333;
+}
+
 /* Checkbox */
 .checkbox-group {
     display: flex;

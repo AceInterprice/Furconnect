@@ -5,6 +5,7 @@
     justify-items: center; /* Centrar las tarjetas */
     width: 90%;
     margin: 0 auto; /* Centrar en la página */
+    margin-top: 15px;
 }
 /*Estilos de las pet-card*/
 .pet-card {

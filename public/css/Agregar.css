@@ -8,14 +8,11 @@
     justify-content: center;
     padding: 30px 60px; /* Más padding para mejor separación */
     margin: 40px auto; /* Centramos el formulario verticalmente */
-    position: fixed; /* Se mantiene sobre la página */
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
     background: white;
     box-shadow: 0px 5px 15px rgba(0, 0, 0, 0.2);
     z-index: 1000;
     border-radius: 10px;
+    margin-top: 15px;
 }
 
 /* Título del formulario */

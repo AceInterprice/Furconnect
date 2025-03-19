@@ -27,7 +27,7 @@ export const searchPets = async (req, res) => {
         if (temperamento) filters.temperamento = new RegExp(temperamento, "i");
         if (sexo) filters.sexo = sexo;
         if (tamaño) filters.tamaño = tamaño;
-        if (edad) filters.edad = edad; // 🔥 La lógica de edad se maneja en `searchPetsByText`
+        if (edad) filters.edad = edad; 
 
         // 🔹 Construir filtros de ubicación correctamente
         const locationFilters = {};

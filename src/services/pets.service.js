@@ -26,8 +26,8 @@ export const searchPetsByText = async (filters = {}, locationFilters = {}, page 
                 case "6-10":
                     matchFilters.edad = { $gte: 6, $lte: 10 };
                     break;
-                case "11+":
-                    matchFilters.edad = { $gte: 11 };
+                case "11-15":
+                    matchFilters.edad = { $gte: 11, $lte: 15 };
                     break;
             }
         }

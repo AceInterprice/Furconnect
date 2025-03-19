@@ -8,6 +8,7 @@ import {
     updatePetInService,
     searchPetsByText 
 } from "../services/pets.service.js";
+import mongoose from "mongoose";
 
 export const searchPets = async (req, res) => {
     try {

@@ -1,4 +1,5 @@
 import Pet from "../models/pet.model.js";
+import User from "../models/user.model.js";
 import { 
     getPets, 
     addNewPet, 

@@ -1,0 +1,173 @@
+/* 🔹 Reset y configuración general */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: Arial, sans-serif;
+}
+
+body {
+    display: flex;
+    height: 100vh;
+    background: #ecf0f1;
+}
+
+/* 🔹 Contenedor principal */
+.dashboard-container {
+    display: flex;
+    width: 100%;
+}
+
+/* 🔹 Sidebar */
+.sidebar {
+    width: 260px;
+    background: #2c3e50;
+    color: white;
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+}
+
+.sidebar h2 {
+    text-align: center;
+    margin-bottom: 20px;
+}
+
+.sidebar nav ul {
+    list-style: none;
+    padding: 0;
+}
+
+.sidebar nav ul li {
+    margin: 10px 0;
+}
+
+.sidebar nav ul li a {
+    color: white;
+    text-decoration: none;
+    display: block;
+    padding: 12px;
+    background: #34495e;
+    border-radius: 5px;
+    transition: 0.3s;
+}
+
+.sidebar nav ul li a:hover {
+    background: #1abc9c;
+}
+
+/* 🔹 Botón de cerrar sesión */
+.logout-btn {
+    background: #e74c3c;
+    color: white;
+    padding: 12px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    width: 100%;
+    font-size: 16px;
+    margin-top: auto;
+    transition: 0.3s;
+}
+
+.logout-btn:hover {
+    background: #c0392b;
+}
+
+/* 🔹 Contenido principal */
+.main-content {
+    flex: 1;
+    padding: 20px;
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+/* 🔹 Tarjetas superiores */
+.cards-container {
+    display: flex;
+    justify-content: space-around;
+    gap: 20px;
+    flex-wrap: wrap;
+    width: 100%;
+}
+
+.card {
+    background: #fff;
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+    text-align: center;
+    width: 250px;
+}
+
+.card h3 {
+    font-size: 18px;
+    margin-bottom: 10px;
+}
+
+.card p {
+    font-size: 22px;
+    font-weight: bold;
+}
+
+/* 🔹 Contenedor de gráficos y tablas */
+.charts-table-container {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    width: 100%;
+}
+
+/* 🔹 Ajuste de gráficos */
+.chart-box {
+    background: #fff;
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+    width: 100%;
+}
+
+/* 🔹 Tablas al 100% */
+.table-container {
+    width: 100%;
+}
+
+.fixed-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 16px;
+}
+
+.fixed-table th,
+.fixed-table td {
+    border: 2px solid #ddd;
+    padding: 12px;
+    text-align: center;
+}
+
+.fixed-table th {
+    background-color: #f4f4f4;
+    font-size: 18px;
+}
+
+/* 🔹 Ajuste de gráficos */
+canvas {
+    width: 100%;
+    height: auto;
+}
+
+/* 🔹 Responsividad */
+@media (max-width: 768px) {
+    .sidebar {
+        width: 200px;
+        padding: 15px;
+    }
+
+    .cards-container {
+        flex-direction: column;
+        align-items: center;
+    }
+}

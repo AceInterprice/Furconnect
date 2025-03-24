@@ -13,6 +13,7 @@ import swaggerJsDoc from 'swagger-jsdoc';
 import connectDB from "./db/db.js";
 import swaggerOptions from './swagger.js';
 import CloudinaryRoutes from './routes/cloudinary.routes.js';
+import adminRoutes from './routes/admin.routes.js'
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -28,6 +29,8 @@ app.use(express.json({ limit: "10mb" }));
 app.use(express.urlencoded({ extended: true, limit: "10mb" }));
 
 connectDB();
+
+app.use('/api/admin', adminRoutes);
 
 const swaggerDocs = swaggerJsDoc(swaggerOptions);
 app.use("/api-docs", swaggerUiExpress.serve, swaggerUiExpress.setup(swaggerDocs));

@@ -13,7 +13,8 @@ import swaggerJsDoc from 'swagger-jsdoc';
 import connectDB from "./db/db.js";
 import swaggerOptions from './swagger.js';
 import CloudinaryRoutes from './routes/cloudinary.routes.js';
-import adminRoutes from './routes/admin.routes.js'
+import adminRoutes from './routes/admin.routes.js'; 
+import PaymentsRoutes from './routes/pay.routes.js'; 
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -60,5 +61,6 @@ app.use(usersRoutes);
 app.use(solicitudesRoutes);
 app.use(chatRoomRoutes);
 app.use(CloudinaryRoutes);
+app.use(PaymentsRoutes); 
 
 export default app;
